@@ -26,30 +26,30 @@ const HomePage = () => {
 
       {/* EVERYTHING BELOW REMAINS EXACTLY THE SAME */}
       {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex flex-col justify-center items-center text-center px-4">
+      <section className="relative min-h-screen md:min-h-[85vh] flex flex-col justify-between md:justify-center items-center text-center px-4 pt-24 md:pt-0 pb-12 md:pb-0">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="space-y-6 relative z-10"
+          className="space-y-3 md:space-y-6 relative z-10 flex-1 flex flex-col justify-center"
         >
           {/* Logo */}
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ duration: 1, delay: 0.4, type: 'spring' }}
-            className="mt-12"
+            className="mt-4 md:mt-8"
           >
-            <Shield size={120} className="mx-auto text-primary mb-6" strokeWidth={1.5} />
+            <Shield size={80} className="md:w-[120px] md:h-[120px] mx-auto text-primary mb-3 md:mb-6" strokeWidth={1.5} />
           </motion.div>
 
           {/* Title */}
           <div>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-primary font-mono tracking-[0.3em] mb-4 text-sm"
+              className="text-primary font-mono tracking-[0.3em] mb-1 md:mb-4 text-xs md:text-sm"
             >
               Rashtriya Raksha University
             </motion.p>
@@ -58,7 +58,7 @@ const HomePage = () => {
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
-              className="text-7xl md:text-9xl font-black tracking-tighter mb-2 bg-linear-to-b from-white to-white/40 bg-clip-text text-transparent"
+              className="text-5xl md:text-9xl font-black tracking-tighter mb-1 md:mb-2 bg-linear-to-b from-white to-white/40 bg-clip-text text-transparent"
             >
               ARCHON
             </motion.h1>
@@ -67,7 +67,7 @@ const HomePage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.9 }}
-              className="text-2xl md:text-3xl font-light tracking-[0.2em] mb-6 text-primary/80"
+              className="text-xl md:text-3xl font-light tracking-[0.2em] mb-2 md:mb-3 text-primary/80"
             >
               2026
             </motion.p>
@@ -76,7 +76,7 @@ const HomePage = () => {
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ delay: 1, duration: 1 }}
-              className="w-24 h-1 bg-primary mb-8 mx-auto"
+              className="w-20 h-0.5 bg-primary mb-2 md:mb-4 mx-auto"
             />
 
             <motion.h2 
@@ -86,7 +86,7 @@ const HomePage = () => {
                 scale: 1,
               }}
               transition={{ delay: 1.2, duration: 0.8, type: "spring" }}
-              className="max-w-2xl mx-auto text-2xl md:text-4xl font-bold leading-relaxed tracking-wider"
+              className="max-w-2xl mx-auto text-lg md:text-4xl font-bold leading-relaxed tracking-wider"
             >
               <motion.span
                 animate={{
@@ -112,7 +112,7 @@ const HomePage = () => {
 
           {/* Countdown */}
           <motion.div 
-            className="mt-10 mb-24"
+            className="mt-4 md:mt-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.6 }}
@@ -123,7 +123,7 @@ const HomePage = () => {
 
         {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          className="hidden md:block absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 md:relative"
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
         >
@@ -138,13 +138,13 @@ const HomePage = () => {
       </section>
 
       {/* Featured Section */}
-      <section className="pt-8 pb-4 px-6 max-w-7xl mx-auto">
+      <section className="block md:block pt-2 md:pt-6 pb-2 md:pb-4 px-3 md:px-6 max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6"
         >
           {[
             { title: '4+', subtitle: 'Battle Arenas', desc: 'Robowars, Code-Raksha, Circuit-X' },
@@ -154,11 +154,11 @@ const HomePage = () => {
             <motion.div
               key={stat.title}
               whileHover={{ y: -10, borderColor: '#10b981' }}
-              className="p-8 bg-white/5 border border-white/10 rounded-2xl transition-all"
+              className="p-3 md:p-6 bg-white/5 border border-white/10 rounded-lg md:rounded-2xl transition-all"
             >
-              <h3 className="text-5xl font-black text-primary mb-2">{stat.title}</h3>
-              <h4 className="text-xl font-bold mb-2">{stat.subtitle}</h4>
-              <p className="text-white/50 text-sm">{stat.desc}</p>
+              <h3 className="text-3xl md:text-5xl font-black text-primary mb-1">{stat.title}</h3>
+              <h4 className="text-sm md:text-xl font-bold mb-1">{stat.subtitle}</h4>
+              <p className="text-white/50 text-xs md:text-sm">{stat.desc}</p>
             </motion.div>
           ))}
         </motion.div>
