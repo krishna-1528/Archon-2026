@@ -9,6 +9,18 @@ const HomePage = () => {
   return (
     <div className="min-h-screen relative overflow-hidden bg-transparent">
       
+      {/* Sign In Button */}
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.8, duration: 0.6 }}
+        className="fixed top-6 right-6 z-50"
+      >
+        <button className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-black transition-all duration-300">
+          Sign In
+        </button>
+      </motion.div>
+
       {/* 2. Replace the old motion divs with the 3D Gaming Portal */}
       <GamingPortalBG />
 
@@ -26,6 +38,7 @@ const HomePage = () => {
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ duration: 1, delay: 0.4, type: 'spring' }}
+            className="mt-12"
           >
             <Shield size={120} className="mx-auto text-primary mb-6" strokeWidth={1.5} />
           </motion.div>
@@ -38,17 +51,26 @@ const HomePage = () => {
               transition={{ delay: 0.6 }}
               className="text-primary font-mono tracking-[0.3em] mb-4 text-sm"
             >
-              INITIATING SOVEREIGN SYSTEMS // 2026
+              Rashtriya Raksha University
             </motion.p>
 
             <motion.h1 
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
-              className="text-7xl md:text-9xl font-black tracking-tighter mb-6 bg-linear-to-b from-white to-white/40 bg-clip-text text-transparent"
+              className="text-7xl md:text-9xl font-black tracking-tighter mb-2 bg-linear-to-b from-white to-white/40 bg-clip-text text-transparent"
             >
               ARCHON
             </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9 }}
+              className="text-2xl md:text-3xl font-light tracking-[0.2em] mb-6 text-primary/80"
+            >
+              2026
+            </motion.p>
 
             <motion.div
               initial={{ scaleX: 0 }}
@@ -58,29 +80,35 @@ const HomePage = () => {
             />
 
             <motion.h2 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.2 }}
-              className="max-w-2xl mx-auto text-lg md:text-xl text-white/70 font-light leading-relaxed tracking-wide"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1,
+              }}
+              transition={{ delay: 1.2, duration: 0.8, type: "spring" }}
+              className="max-w-2xl mx-auto text-2xl md:text-4xl font-bold leading-relaxed tracking-wider"
             >
-              Innovating Technology for National Security
+              <motion.span
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                  textShadow: [
+                    '0 0 20px rgba(0,242,255,0.5), 0 0 40px rgba(255,0,255,0.3)',
+                    '0 0 30px rgba(255,0,255,0.5), 0 0 60px rgba(0,242,255,0.3)',
+                    '0 0 20px rgba(0,242,255,0.5), 0 0 40px rgba(255,0,255,0.3)',
+                  ],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent"
+                style={{ backgroundSize: '200% auto' }}
+              >
+                Coming Soon
+              </motion.span>
             </motion.h2>
           </div>
-
-          {/* Call to Action */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4 }}
-            className="flex gap-4 justify-center mt-8"
-          >
-            <button className="bg-primary text-black px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider hover:bg-white transition-all hover:scale-105">
-              Register Now
-            </button>
-            <button className="border border-primary text-primary px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider hover:bg-primary/10 transition-all">
-              Learn More
-            </button>
-          </motion.div>
 
           {/* Countdown */}
           <motion.div 
