@@ -123,7 +123,7 @@ const HomePage = () => {
 
         {/* Scroll Indicator */}
         <motion.div
-          className="hidden md:block absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 md:relative"
+          className="mt-4 md:mt-6 flex justify-center"
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
         >
