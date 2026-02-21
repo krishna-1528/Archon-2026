@@ -29,7 +29,7 @@ const LandingAnimation = ({ onComplete }) => {
       <div 
         className="absolute inset-0 opacity-20"
         style={{
-          backgroundImage: 'linear-gradient(#10b981 1px, transparent 1px), linear-gradient(90deg, #10b981 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(#00f2ff 1px, transparent 1px), linear-gradient(90deg, #00f2ff 1px, transparent 1px)',
           backgroundSize: '60px 60px',
         }}
       />

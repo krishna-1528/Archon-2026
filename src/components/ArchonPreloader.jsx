@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 
 // --- THEME CONFIGURATION ---
 const CONFIG = {
-  primary: '#10b981', // Circuit Green (from Tailwind config)
-  secondary: '#3b82f6', // Blue
-  bg: '#020617', // Night Ops Black (from Tailwind config)
-  accent: '#064e3b', // Deep Green
+  primary: '#00f2ff', // Electric Cyan
+  secondary: '#ff00ff', // Magenta
+  bg: '#0d001a', // Deep Purple Black
+  accent: '#7000ff', // Purple
   duration: 1000, // 1 second
   title: "ARCHON 2026",
   motto: "Innovating Technology for National Security"

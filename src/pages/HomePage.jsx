@@ -14,12 +14,12 @@ const HomePage = () => {
 
       {/* EVERYTHING BELOW REMAINS EXACTLY THE SAME */}
       {/* Hero Section */}
-      <section className="relative h-screen flex flex-col justify-center items-center text-center px-4">
+      <section className="relative min-h-[85vh] flex flex-col justify-center items-center text-center px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="space-y-8"
+          className="space-y-6 relative z-10"
         >
           {/* Logo */}
           <motion.div
@@ -72,7 +72,7 @@ const HomePage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4 }}
-            className="flex gap-4 justify-center mt-12"
+            className="flex gap-4 justify-center mt-8"
           >
             <button className="bg-primary text-black px-8 py-3 rounded-full font-bold text-sm uppercase tracking-wider hover:bg-white transition-all hover:scale-105">
               Register Now
@@ -84,7 +84,7 @@ const HomePage = () => {
 
           {/* Countdown */}
           <motion.div 
-            className="mt-16"
+            className="mt-10 mb-24"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.6 }}
@@ -92,10 +92,25 @@ const HomePage = () => {
             <Countdown targetDate={new Date('2026-04-09T00:00:00')} className="justify-center" />
           </motion.div>
         </motion.div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+        >
+          <div className="w-6 h-10 border-2 border-primary/50 rounded-full flex items-start justify-center p-2">
+            <motion.div 
+              className="w-1 h-2 bg-primary rounded-full"
+              animate={{ y: [0, 12, 0] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+            />
+          </div>
+        </motion.div>
       </section>
 
       {/* Featured Section */}
-      <section className="py-20 px-6 max-w-7xl mx-auto">
+      <section className="pt-8 pb-4 px-6 max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
