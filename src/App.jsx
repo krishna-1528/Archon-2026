@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import ArchonPreloader from './components/ArchonPreloader';
 import LandingAnimation from './components/LandingAnimation';
@@ -14,6 +14,16 @@ import TeamPage from './pages/TeamPage';
 import SponsorsPage from './pages/SponsorsPage';
 // 1. Import the background component
 import GamingPortalBG from './components/GamingPortalBG';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname]);
+
+  return null;
+}
 
 function App() {
   const hasSessionLoaded = typeof window !== 'undefined' && sessionStorage.getItem('archonLoaded') === 'true';
@@ -34,6 +44,7 @@ function App() {
   // src/App.jsx - Only showing the modified return section
 return (
   <Router>
+    <ScrollToTop />
     <div className="bg-background min-h-screen text-white">
       <AnimatePresence mode="wait">
         {showPreloader && (
