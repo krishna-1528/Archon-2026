@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Shield } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Countdown from '../components/Countdown';
 // 1. Import your new background component
 import GamingPortalBG from '../components/GamingPortalBG';
@@ -16,9 +17,9 @@ const HomePage = () => {
         transition={{ delay: 0.8, duration: 0.6 }}
         className="fixed top-6 right-6 z-50"
       >
-        <button className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-black transition-all duration-300">
+        <Link to="/signin" className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-black transition-all duration-300">
           Sign In
-        </button>
+        </Link>
       </motion.div>
 
       {/* 2. Replace the old motion divs with the 3D Gaming Portal */}
@@ -121,19 +122,25 @@ const HomePage = () => {
           </motion.div>
         </motion.div>
 
-        {/* Scroll Indicator */}
+        {/* Registration Actions */}
         <motion.div
-          className="mt-4 md:mt-6 flex justify-center"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
+          className="mt-4 md:mt-6 flex flex-wrap items-center justify-center gap-3"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.8, duration: 0.5 }}
         >
-          <div className="w-6 h-10 border-2 border-primary/50 rounded-full flex items-start justify-center p-2">
-            <motion.div 
-              className="w-1 h-2 bg-primary rounded-full"
-              animate={{ y: [0, 12, 0] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-            />
-          </div>
+          <Link
+            to="/register"
+            className="px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-md border-2 border-primary text-black bg-primary hover:opacity-90 transition-all duration-300"
+          >
+            Register
+          </Link>
+          <Link
+            to="/signin"
+            className="px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-md border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-black transition-all duration-300"
+          >
+            Enter Pass
+          </Link>
         </motion.div>
       </section>
 

@@ -12,15 +12,31 @@ import ExpoPage from './pages/ExpoPage';
 import AboutPage from './pages/AboutPage';
 import TeamPage from './pages/TeamPage';
 import SponsorsPage from './pages/SponsorsPage';
+import EventDetail from './pages/EventDetail';
+import RegisterPage from './pages/RegisterPage';
+import SignInPage from './pages/SignInPage';
+import DashboardPage from './pages/DashboardPage';
 // 1. Import the background component
 import GamingPortalBG from './components/GamingPortalBG';
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
+    if (hash) {
+      const targetId = hash.replace('#', '');
+      const timeoutId = window.setTimeout(() => {
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 80);
+
+      return () => window.clearTimeout(timeoutId);
+    }
+
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [pathname]);
+  }, [pathname, hash]);
 
   return null;
 }
@@ -72,12 +88,17 @@ return (
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/arenas" element={<ArenasPage />} />
+              <Route path="/battle-arena" element={<ArenasPage />} />
               <Route path="/workshops" element={<WorkshopsPage />} />
               <Route path="/events" element={<EventsPage />} />
+              <Route path="/event/:eventId" element={<EventDetail />} />
               <Route path="/expo" element={<ExpoPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/team" element={<TeamPage />} />
               <Route path="/sponsors" element={<SponsorsPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/signin" element={<SignInPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
             </Routes>
 
             <footer className="relative px-4 py-8 text-center border-t border-white/10 opacity-50 text-[10px] tracking-widest uppercase">
