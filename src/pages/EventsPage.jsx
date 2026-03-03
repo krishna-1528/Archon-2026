@@ -14,17 +14,17 @@ const EventsPage = () => {
 
   const battleBriefings = [
     {
-      title: 'VLSI Circuit Clash',
+      title: 'Robowars',
       desc: 'Design mission-ready logic architectures and showcase rapid prototyping skills for sovereign systems.',
       icon: Shield
     },
     {
-      title: 'Cyber Ops Challenge',
+      title: 'Capture The Flag',
       desc: 'Defend and attack in live security scenarios inspired by national-infrastructure cyber resilience drills.',
       icon: Radar
     },
     {
-      title: 'E-sports Express Lane',
+      title: 'Hardware IOT Hackathon',
       desc: 'Jump directly to the tactical gaming bracket details on the Battle Arena page.',
       icon: Gamepad2,
       hashLink: '/battle-arena#esports'
@@ -33,19 +33,25 @@ const EventsPage = () => {
 
   const briefingBlocks = [
     {
-      title: 'Guest Lectures',
+      title: 'PCB Designing (CIRCUIT-X)',
       desc: 'Short, high-signal talks from defense-tech leaders on innovation, policy, and mission impact.',
       icon: GraduationCap,
       cta: '/events#event-schedule'
     },
     {
-      title: 'Workshops',
+      title: 'Blind Coding',
       desc: 'Hands-on sessions covering VLSI, CAD, AI security, and practical rapid-build workflows.',
       icon: Wrench,
       cta: '/workshops'
     },
     {
-      title: 'Parallel Events',
+      title: 'Googly (Technical Quiz)',
+      desc: 'Fast-paced side events for strategy, speed, precision, and problem-solving across all three days.',
+      icon: CalendarDays,
+      cta: '/events#parallel-events'
+    },
+    {
+      title: 'Cad vs Cad',
       desc: 'Fast-paced side events for strategy, speed, precision, and problem-solving across all three days.',
       icon: CalendarDays,
       cta: '/events#parallel-events'

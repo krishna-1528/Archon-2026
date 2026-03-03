@@ -31,7 +31,7 @@ const navigationItems = [
 ];
 
 const socialItems = [
-  { href: 'https://www.instagram.com/rru_official/', icon: Instagram, label: 'Insta', color: '#ff00ff' },
+  { href: 'https://www.instagram.com/rakshauni?igsh=MXc3bjFmd284M2dnbA==', icon: Instagram, label: 'Insta', color: '#ff00ff' },
   { href: 'https://www.linkedin.com/school/rru-gandhinagar/', icon: Linkedin, label: 'Linkedin', color: '#00f2ff' },
   { href: 'https://www.youtube.com/', icon: Youtube, label: 'Youtube', color: '#ff00ff' },
   { href: 'https://x.com/', icon: Twitter, label: 'Twitter', color: '#00f2ff' },

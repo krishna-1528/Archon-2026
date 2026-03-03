@@ -161,7 +161,7 @@ export const eventsData = [
   },
   {
     id: 'esports-fifa',
-    title: 'FIFA Command League',
+    title: 'Free-Fire',
     category: 'esports',
     date: '12 Apr 2026',
     time: '18:00 IST',
