@@ -17,7 +17,7 @@ export const eventsData = [
   },
   {
     id: 'code-raksha',
-    title: 'Code-Raksha',
+    title: 'Capture The Flag',
     category: 'battle',
     date: '10 Apr 2026',
     time: '14:00 IST',
@@ -33,7 +33,7 @@ export const eventsData = [
   },
   {
     id: 'circuit-x',
-    title: 'Circuit-X',
+    title: 'PCB Designing (CIRCUIT-X)',
     category: 'battle',
     date: '11 Apr 2026',
     time: '09:30 IST',
@@ -49,7 +49,7 @@ export const eventsData = [
   },
   {
     id: 'vlsi-vanguard',
-    title: 'VLSI Vanguard',
+    title: 'Hardware IOT Hackathon',
     category: 'battle',
     date: '11 Apr 2026',
     time: '13:00 IST',
@@ -65,7 +65,7 @@ export const eventsData = [
   },
   {
     id: 'drone-tactics',
-    title: 'Drone Tactics Simulation',
+    title: 'Blind Coding',
     category: 'battle',
     date: '12 Apr 2026',
     time: '10:00 IST',
@@ -81,7 +81,7 @@ export const eventsData = [
   },
   {
     id: 'signal-intel',
-    title: 'Signal Intel Relay',
+    title: 'Googly (Technical Quiz)',
     category: 'battle',
     date: '12 Apr 2026',
     time: '15:00 IST',
@@ -94,6 +94,22 @@ export const eventsData = [
     contact: 'Comms Control • +91-90000-10006 • signals@archon2026.in',
     pdfUrl: '/assets/events/signal-intel-briefing.pdf',
     registrationLink: 'https://forms.gle/archon-signal-intel'
+  },
+  {
+    id: 'cad-vs-cad',
+    title: 'Cad vs Cad',
+    category: 'battle',
+    date: '12 Apr 2026',
+    time: '16:30 IST',
+    loc: 'Design War Room',
+    entry: 'Team of 2',
+    poster: '/assets/events/circuit-x.jpg',
+    about: 'A precision-focused CAD face-off where teams solve constrained design problems under strict time limits.',
+    prizes: 'Winner: ₹35,000 • Runner-up: ₹18,000 • Jury Choice: ₹7,000',
+    rules: 'Use approved CAD toolchains only. Template tampering or external model imports are not allowed.',
+    contact: 'Design Cell • +91-90000-10007 • cad@archon2026.in',
+    pdfUrl: '/assets/events/circuit-x-briefing.pdf',
+    registrationLink: 'https://forms.gle/archon-cad-vs-cad'
   },
   {
     id: 'esports-bgmi',

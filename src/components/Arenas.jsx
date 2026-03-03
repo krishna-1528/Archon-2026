@@ -3,7 +3,7 @@ import { Zap, Terminal, Shield, Trophy } from 'lucide-react';
 
 const arenas = [
   { 
-    name: "Code-Raksha", 
+    name: "Capture The Flag", 
     desc: "24-hour national security hackathon challenge[cite: 5].", 
     icon: <Terminal className="text-primary" /> 
   },
@@ -13,12 +13,12 @@ const arenas = [
     icon: <Zap className="text-primary" /> 
   },
   { 
-    name: "E-Sports", 
+    name: "Hardware IOT Hackathon", 
     desc: "High-energy combat: BGMI, Valorant, and Counterstrike [cite: 20-24].", 
     icon: <Trophy className="text-primary" /> 
   },
   { 
-    name: "Circuit-X", 
+    name: "Cad vs Cad", 
     desc: "PCB designing for the next generation of sovereign systems[cite: 7].", 
     icon: <Shield className="text-primary" /> 
   }

@@ -154,7 +154,7 @@ const HomePage = () => {
           className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6"
         >
           {[
-            { title: '4+', subtitle: 'Battle Arenas', desc: 'Robowars, Code-Raksha, Circuit-X' },
+            { title: '7+', subtitle: 'Battle Arenas', desc: 'Robowars, Capture The Flag, Cad vs Cad' },
             { title: '10+', subtitle: 'Tech Workshops', desc: 'Advanced security & defense tech' },
             { title: '24hr', subtitle: 'Hackathon', desc: 'National security challenges' }
           ].map((stat, i) => (

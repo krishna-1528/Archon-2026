@@ -181,7 +181,7 @@ const EventsPage = () => {
           <div className="space-y-4">
             {[
               { day: 'Day 1', events: 'Opening Ceremony, Keynote Speeches, Workshop Sessions' },
-              { day: 'Day 2', events: 'Arenas Competitions, Defence Expo, Hackathon Begins' },
+              { day: 'Day 2', events: 'Arenas Competitions, Guest/Keynote Speaker Sessions, Hackathon Begins' },
               { day: 'Day 3', events: 'Finals, Award Ceremony, Closing Ceremony' }
             ].map((schedule, i) => (
               <motion.div

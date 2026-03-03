@@ -5,7 +5,7 @@ const Navbar = () => {
   const navLinks = [
     { name: 'Arenas', href: '#arenas' },
     { name: 'Workshops', href: '#workshops' },
-    { name: 'Defence Expo', href: '#expo' },
+    { name: 'Guest/Keynote Speakers', href: '#expo' },
     { name: 'Schedule', href: '#keynotes' }
   ];
 

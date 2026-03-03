@@ -49,7 +49,7 @@ const ArenasPage = () => {
           <SectionHeader
             number={1}
             title="Tactical Event Cards"
-            subtitle="Six core Battle Arena operations"
+            subtitle="Seven core Battle Arena operations"
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-7">

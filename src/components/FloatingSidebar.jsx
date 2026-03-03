@@ -25,7 +25,7 @@ const navigationItems = [
   { path: '/arenas', icon: Swords, label: 'Battle Arenas', color: '#10b981' },
   { path: '/workshops', icon: Wrench, label: 'Worshops', color: '#3b82f6' },
   { path: '/events', icon: Calendar, label: 'Events', color: '#8b5cf6' },
-  { path: '/expo', icon: Shield, label: 'Defense Expo', color: '#ef4444' },
+  { path: '/expo', icon: Shield, label: 'Guest/Keynote Speakers', color: '#ef4444' },
   { path: '/sponsors', icon: Handshake, label: 'Sponsors', color: '#ff00ff' },
   { path: '/about', icon: Info, label: 'About Us', color: '#00f2ff' },
 ];

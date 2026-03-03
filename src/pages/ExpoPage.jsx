@@ -1,50 +1,50 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Radar, Zap, Monitor, Drone, Lock } from 'lucide-react';
+import { Mic, Brain, Lightbulb, BookOpen, Users, MessageSquare } from 'lucide-react';
 import SectionHeader from '../components/SectionHeader';
 
 const expoItems = [
   {
-    title: "Autonomous Defense Drones",
-    category: "Aerial Systems",
-    icon: Drone,
-    description: "Next-generation surveillance and combat UAVs with AI-powered threat detection and autonomous navigation systems.",
-    features: ["AI Target Recognition", "Swarm Coordination", "Long-range Communication"]
+    title: "Opening Keynote: The Future of National Security",
+    category: "Main Stage",
+    icon: Mic,
+    description: "A strategic keynote on evolving security challenges, digital resilience, and the role of youth-led innovation.",
+    features: ["Policy Insights", "Strategic Roadmap", "Q&A Session"]
   },
   {
-    title: "Cybersecurity Command Center",
-    category: "Digital Defense",
-    icon: Lock,
-    description: "Real-time threat monitoring and response system for national critical infrastructure protection.",
-    features: ["Zero-Day Detection", "AI Threat Analysis", "Quantum Encryption"]
+    title: "AI & Cyber Warfare",
+    category: "Expert Talk",
+    icon: Brain,
+    description: "Industry experts decode emerging AI-powered threats and practical approaches to proactive cyber defense.",
+    features: ["Threat Modeling", "Live Case Studies", "Blue Team Tactics"]
   },
   {
-    title: "Advanced Radar Systems",
-    category: "Surveillance",
-    icon: Radar,
-    description: "Phased array radar technology for border surveillance and airspace monitoring with enhanced detection capabilities.",
-    features: ["360° Coverage", "Stealth Detection", "Multi-target Tracking"]
+    title: "Innovation Spotlight: Startups in Defense Tech",
+    category: "Spotlight",
+    icon: Lightbulb,
+    description: "Founders and researchers present breakthrough ideas shaping the next generation of defense and security systems.",
+    features: ["Startup Pitches", "Prototype Stories", "Mentor Feedback"]
   },
   {
-    title: "Tactical Communication Network",
-    category: "Communications",
-    icon: Monitor,
-    description: "Secure military-grade mesh network for real-time battlefield communications and data sharing.",
-    features: ["End-to-end Encryption", "Mesh Topology", "Low Latency"]
+    title: "Leadership Masterclass",
+    category: "Professional Growth",
+    icon: BookOpen,
+    description: "Guest speakers share leadership principles, mission planning practices, and decision-making under pressure.",
+    features: ["Command Thinking", "Crisis Communication", "Career Guidance"]
   },
   {
-    title: "Electronic Warfare Suite",
-    category: "Counter Measures",
-    icon: Zap,
-    description: "Integrated EW system for signal intelligence, jamming, and electronic countermeasures in modern warfare.",
-    features: ["Signal Jamming", "SIGINT Collection", "Counter-drone Tech"]
+    title: "Panel: Women in Security & Technology",
+    category: "Panel Discussion",
+    icon: Users,
+    description: "Accomplished leaders discuss inclusion, mentorship, and high-impact careers across security and technology sectors.",
+    features: ["Career Journeys", "Mentorship Pathways", "Open Forum"]
   },
   {
-    title: "Sovereign Tech Initiative",
-    category: "Self-Reliance",
-    icon: Shield,
-    description: "Indigenous technology development for complete defense self-sufficiency and reduced foreign dependency.",
-    features: ["Make in India", "Technology Transfer", "Local Manufacturing"]
+    title: "Closing Conversation with Distinguished Guests",
+    category: "Fireside Session",
+    icon: MessageSquare,
+    description: "An interactive closing dialogue with keynote guests featuring reflections, lessons, and guidance for participants.",
+    features: ["Interactive Discussion", "Audience Questions", "Takeaway Notes"]
   }
 ];
 
@@ -75,17 +75,17 @@ const ExpoPage = () => {
             transition={{ delay: 0.3 }}
             className="text-primary font-mono text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase"
           >
-            Six Cutting-Edge Technology Sectors
+            Guest & Keynote Speaker Sessions
           </motion.span>
           <h1 className="text-5xl sm:text-7xl md:text-9xl font-black mt-4 mb-5 sm:mb-6 leading-tight">
-            DEFENCE
+            GUEST
             <br />
             <span className="bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
-              EXPO
+              SPEAKERS
             </span>
           </h1>
           <p className="text-base sm:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed px-2">
-            Witness cutting-edge defense technology and innovations. Explore the future of India's self-reliant defense ecosystem.
+            Hear from keynote leaders, domain experts, and distinguished guests across security, strategy, and emerging technology.
           </p>
         </motion.div>
       </section>
@@ -95,8 +95,8 @@ const ExpoPage = () => {
         <div className="max-w-7xl mx-auto">
           <SectionHeader 
             number={3}
-            title="Advanced Defense Technologies"
-            subtitle="Showcasing India's indigenous defense innovation ecosystem"
+            title="Guest/Keynote Speakers"
+            subtitle="Curated sessions from leaders, practitioners, and innovators"
           />
 
       {/* Expo Grid */}
@@ -181,10 +181,10 @@ const ExpoPage = () => {
           viewport={{ once: true }}
           className="max-w-4xl mx-auto p-6 sm:p-12 border border-primary/30 rounded-3xl text-center"
         >
-          <Shield size={64} className="mx-auto text-primary mb-6" strokeWidth={1.5} />
-          <h3 className="text-2xl sm:text-4xl font-black mb-4">Be Part of India's Tech Revolution</h3>
+          <Mic size={64} className="mx-auto text-primary mb-6" strokeWidth={1.5} />
+          <h3 className="text-2xl sm:text-4xl font-black mb-4">Join the Guest & Keynote Experience</h3>
           <p className="text-white/70 mb-8 max-w-2xl mx-auto">
-            The Defence Expo showcases indigenous innovations driving Atmanirbhar Bharat. Network with industry leaders, explore career opportunities, and witness technology that's securing our nation's future.
+            Attend high-impact talks, connect with notable speakers, and gain practical insights that shape your academic and professional journey.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <motion.button 
@@ -192,14 +192,14 @@ const ExpoPage = () => {
               whileTap={{ scale: 0.95 }}
               className="bg-primary text-black px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-white transition-all w-full sm:w-auto"
             >
-              Book Expo Pass
+              Reserve Your Seat
             </motion.button>
             <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="border border-primary text-primary px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-primary/10 transition-all w-full sm:w-auto"
             >
-              Exhibitor Info
+              Speaker Lineup
             </motion.button>
           </div>
         </motion.div>
