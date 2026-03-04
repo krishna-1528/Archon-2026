@@ -72,24 +72,6 @@ const EventDetail = () => {
             <div className="mb-6">
               <p className="text-primary font-mono text-xs tracking-[0.25em] uppercase mb-3">TR-26 // Event Profile</p>
               <h1 className="text-3xl sm:text-5xl font-black mb-3">{event.title}</h1>
-              <div className="grid grid-cols-2 gap-3 text-xs sm:text-sm">
-                <div className="border border-white/10 rounded-lg p-3 bg-black/20">
-                  <p className="text-white/40 uppercase">Date</p>
-                  <p className="mt-1 text-white/90 font-semibold">{event.date}</p>
-                </div>
-                <div className="border border-white/10 rounded-lg p-3 bg-black/20">
-                  <p className="text-white/40 uppercase">Time</p>
-                  <p className="mt-1 text-white/90 font-semibold">{event.time}</p>
-                </div>
-                <div className="border border-white/10 rounded-lg p-3 bg-black/20">
-                  <p className="text-white/40 uppercase">Loc</p>
-                  <p className="mt-1 text-white/90 font-semibold">{event.loc}</p>
-                </div>
-                <div className="border border-white/10 rounded-lg p-3 bg-black/20">
-                  <p className="text-white/40 uppercase">Entry</p>
-                  <p className="mt-1 text-white/90 font-semibold">{event.entry}</p>
-                </div>
-              </div>
             </div>
 
             <div className="flex flex-wrap gap-2 mb-5">
@@ -108,7 +90,7 @@ const EventDetail = () => {
               ))}
             </div>
 
-            <div className="flex-1 border border-white/10 rounded-2xl bg-black/20 p-5 sm:p-6">
+            <div className="flex-1 min-h-52 border border-white/10 rounded-2xl bg-black/20 p-5 sm:p-6">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeTab}
@@ -143,7 +125,7 @@ const EventDetail = () => {
                 rel="noreferrer"
                 className="flex-1 inline-flex items-center justify-center px-5 py-3.5 rounded-xl bg-secondary text-black font-black text-xs sm:text-sm uppercase tracking-wider hover:brightness-110 transition-all"
               >
-                Join Mission
+                Register
               </a>
             </div>
           </motion.div>

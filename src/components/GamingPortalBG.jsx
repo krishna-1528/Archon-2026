@@ -77,6 +77,7 @@ const GamingPortalBG = () => {
 
       {/* Cinematic Luminous Overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,#12002b_130%)] pointer-events-none" />
+
     </div>
   );
 };

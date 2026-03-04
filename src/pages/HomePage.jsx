@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,15 @@ import Countdown from '../components/Countdown';
 import GamingPortalBG from '../components/GamingPortalBG';
 
 const HomePage = () => {
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
+
   return (
     <div className="min-h-screen relative overflow-hidden bg-transparent">
       
@@ -104,7 +113,7 @@ const HomePage = () => {
                   ease: "linear"
                 }}
                 className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent"
-                style={{ backgroundSize: '200% auto' }}
+                style={{ backgroundSize: '200% auto', fontFamily: '"Iceberg", sans-serif' }}
               >
                 Coming Soon
               </motion.span>

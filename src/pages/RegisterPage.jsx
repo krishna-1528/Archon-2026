@@ -1,17 +1,48 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { auth, db, googleProvider } from '../firebase';
+import { motion } from 'framer-motion';
+import { auth, db } from '../firebase';
 
 const generateArchonId = () => {
   const digits = Math.floor(1000 + Math.random() * 9000);
   return `AR26-${digits}`;
 };
 
+const isRegistrationComplete = (profile = {}) =>
+  Boolean(
+    profile.name &&
+      profile.email &&
+      profile.phone &&
+      profile.gender &&
+      profile.dateOfBirth &&
+      profile.collegeState &&
+      profile.collegeDistrict &&
+      profile.collegeName
+  );
+
+const galaxyStars = [
+  { top: '7%', left: '12%' },
+  { top: '12%', left: '72%' },
+  { top: '18%', left: '46%' },
+  { top: '25%', left: '88%' },
+  { top: '31%', left: '27%' },
+  { top: '39%', left: '61%' },
+  { top: '47%', left: '14%' },
+  { top: '55%', left: '79%' },
+  { top: '63%', left: '43%' },
+  { top: '72%', left: '68%' },
+  { top: '81%', left: '23%' },
+  { top: '90%', left: '86%' },
+];
+
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const location = useLocation();
+  const isGoogleRegistration = Boolean(location.state?.isGoogleRegistration);
+  const googleUid = location.state?.googleUid;
+  const [name, setName] = useState(location.state?.googleProfile?.name || '');
   const [phone, setPhone] = useState('');
   const [referralCode, setReferralCode] = useState('');
   const [gender, setGender] = useState('');
@@ -22,11 +53,22 @@ const RegisterPage = () => {
   const [instagramHandle, setInstagramHandle] = useState('');
   const [facebookHandle, setFacebookHandle] = useState('');
   const [linkedInHandle, setLinkedInHandle] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(location.state?.googleProfile?.email || '');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (location.state?.googleProfile?.name) {
+      setName(location.state.googleProfile.name);
+    }
+
+    if (location.state?.googleProfile?.email) {
+      setEmail(location.state.googleProfile.email);
+    }
+  }, [location.state]);
 
   const handleSignUp = async (event) => {
     event.preventDefault();
@@ -37,29 +79,81 @@ const RegisterPage = () => {
       return;
     }
 
+    if (!isGoogleRegistration && password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
+    if (!isGoogleRegistration && password !== confirmPassword) {
+      setError('Password and confirm password do not match.');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const archonId = generateArchonId();
+      if (isGoogleRegistration) {
+        const currentUser = auth.currentUser;
+        const uid = googleUid || currentUser?.uid;
 
-      await setDoc(doc(db, 'users', userCredential.user.uid), {
-        name,
-        email,
-        archon_id: archonId,
-        paidStatus: false,
-        passType: 'General',
-        phone,
-        referralCode,
-        gender,
-        dateOfBirth,
-        collegeState,
-        collegeDistrict,
-        collegeName,
-        instagramHandle,
-        facebookHandle,
-        linkedInHandle,
-      });
+        if (!uid) {
+          throw new Error('Google session expired. Please continue with Google again.');
+        }
+
+        const userRef = doc(db, 'users', uid);
+        const existingUser = await getDoc(userRef);
+        const existingData = existingUser.exists() ? existingUser.data() : {};
+        const archonId = existingData.archon_id || existingData.archonId || generateArchonId();
+
+        await setDoc(
+          userRef,
+          {
+            name: name || currentUser?.displayName || 'Archon User',
+            email: email || currentUser?.email || '',
+            archon_id: archonId,
+            archonId,
+            paidStatus: false,
+            passType: 'General',
+            phone,
+            referralCode,
+            gender,
+            dateOfBirth,
+            collegeState,
+            collegeDistrict,
+            collegeName,
+            instagramHandle,
+            facebookHandle,
+            linkedInHandle,
+            authProvider: 'google',
+            registrationCompleted: true,
+          },
+          { merge: true }
+        );
+      } else {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const archonId = generateArchonId();
+
+        await setDoc(doc(db, 'users', userCredential.user.uid), {
+          name,
+          email,
+          archon_id: archonId,
+          archonId,
+          paidStatus: false,
+          passType: 'General',
+          phone,
+          referralCode,
+          gender,
+          dateOfBirth,
+          collegeState,
+          collegeDistrict,
+          collegeName,
+          instagramHandle,
+          facebookHandle,
+          linkedInHandle,
+          authProvider: 'email',
+          registrationCompleted: true,
+        });
+      }
 
       navigate('/dashboard');
     } catch (signupError) {
@@ -69,40 +163,36 @@ const RegisterPage = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    setError('');
-    setLoading(true);
-
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      const userRef = doc(db, 'users', user.uid);
-      const existingUser = await getDoc(userRef);
-
-      if (!existingUser.exists()) {
-        await setDoc(userRef, {
-          name: user.displayName || 'Archon User',
-          email: user.email || '',
-          archonId: generateArchonId(),
-          paidStatus: false,
-          passType: 'General',
-          authProvider: 'google',
-        });
-      }
-
-      navigate('/dashboard');
-    } catch (googleError) {
-      setError(googleError.message || 'Unable to continue with Google right now.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <section className="relative min-h-[85vh] px-4 py-10 md:py-14 overflow-hidden">
       <div className="absolute inset-0 bg-linear-to-b from-background via-background to-black/60" />
-      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-150 h-150 rounded-full bg-primary/10 blur-3xl" />
-      <div className="absolute -bottom-40 right-10 w-105 h-105 rounded-full bg-secondary/10 blur-3xl" />
+      <motion.div
+        className="absolute -top-32 left-1/2 -translate-x-1/2 w-150 h-150 rounded-full bg-primary/10 blur-3xl"
+        animate={{ scale: [1, 1.06, 1], opacity: [0.35, 0.55, 0.35] }}
+        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute -bottom-40 right-10 w-105 h-105 rounded-full bg-secondary/10 blur-3xl"
+        animate={{ scale: [1.05, 1, 1.05], opacity: [0.4, 0.25, 0.4] }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute top-16 left-1/2 -translate-x-1/2 w-190 h-190 rounded-full border border-white/10"
+        animate={{ rotate: -360 }}
+        transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+      />
+
+      <div className="absolute inset-0 pointer-events-none">
+        {galaxyStars.map((star, index) => (
+          <motion.span
+            key={`${star.top}-${star.left}`}
+            className="absolute w-1 h-1 rounded-full bg-white/70"
+            style={{ top: star.top, left: star.left }}
+            animate={{ opacity: [0.2, 0.9, 0.2], scale: [0.8, 1.35, 0.8] }}
+            transition={{ duration: 2.2 + (index % 5) * 0.55, repeat: Infinity, ease: 'easeInOut' }}
+          />
+        ))}
+      </div>
 
       <div className="relative z-10 max-w-5xl mx-auto rounded-2xl border border-primary/20 bg-background/60 backdrop-blur-md p-5 md:p-8">
         <h1 className="text-center text-3xl md:text-5xl font-black tracking-tight text-white mb-8">REGISTER</h1>
@@ -222,16 +312,19 @@ const RegisterPage = () => {
               onChange={(event) => setPassword(event.target.value)}
               className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
               minLength={6}
-              required
+              required={!isGoogleRegistration}
+              disabled={isGoogleRegistration}
             />
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              disabled={loading}
-              className="w-full rounded-md border-2 border-primary px-4 py-2.5 text-primary font-bold uppercase text-xs tracking-wider hover:bg-primary hover:text-black transition-all disabled:opacity-70"
-            >
-              Continue with Google
-            </button>
+            <input
+              type="password"
+              placeholder="Confirm Password*"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
+              minLength={6}
+              required={!isGoogleRegistration}
+              disabled={isGoogleRegistration}
+            />
           </div>
 
           <label className="flex items-center gap-2 text-sm text-white/80">
