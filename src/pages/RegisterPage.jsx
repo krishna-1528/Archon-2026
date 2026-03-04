@@ -1,14 +1,26 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
-import { auth, db, googleProvider } from '../firebase';
+import { auth, db } from '../firebase';
 
 const generateArchonId = () => {
   const digits = Math.floor(1000 + Math.random() * 9000);
   return `AR26-${digits}`;
 };
+
+const isRegistrationComplete = (profile = {}) =>
+  Boolean(
+    profile.name &&
+      profile.email &&
+      profile.phone &&
+      profile.gender &&
+      profile.dateOfBirth &&
+      profile.collegeState &&
+      profile.collegeDistrict &&
+      profile.collegeName
+  );
 
 const galaxyStars = [
   { top: '7%', left: '12%' },
@@ -27,7 +39,10 @@ const galaxyStars = [
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const location = useLocation();
+  const isGoogleRegistration = Boolean(location.state?.isGoogleRegistration);
+  const googleUid = location.state?.googleUid;
+  const [name, setName] = useState(location.state?.googleProfile?.name || '');
   const [phone, setPhone] = useState('');
   const [referralCode, setReferralCode] = useState('');
   const [gender, setGender] = useState('');
@@ -38,11 +53,22 @@ const RegisterPage = () => {
   const [instagramHandle, setInstagramHandle] = useState('');
   const [facebookHandle, setFacebookHandle] = useState('');
   const [linkedInHandle, setLinkedInHandle] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(location.state?.googleProfile?.email || '');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (location.state?.googleProfile?.name) {
+      setName(location.state.googleProfile.name);
+    }
+
+    if (location.state?.googleProfile?.email) {
+      setEmail(location.state.googleProfile.email);
+    }
+  }, [location.state]);
 
   const handleSignUp = async (event) => {
     event.preventDefault();
@@ -53,62 +79,85 @@ const RegisterPage = () => {
       return;
     }
 
-    setLoading(true);
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const archonId = generateArchonId();
-
-      await setDoc(doc(db, 'users', userCredential.user.uid), {
-        name,
-        email,
-        archon_id: archonId,
-        paidStatus: false,
-        passType: 'General',
-        phone,
-        referralCode,
-        gender,
-        dateOfBirth,
-        collegeState,
-        collegeDistrict,
-        collegeName,
-        instagramHandle,
-        facebookHandle,
-        linkedInHandle,
-      });
-
-      navigate('/dashboard');
-    } catch (signupError) {
-      setError(signupError.message || 'Unable to register right now.');
-    } finally {
-      setLoading(false);
+    if (!isGoogleRegistration && password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
     }
-  };
 
-  const handleGoogleLogin = async () => {
-    setError('');
+    if (!isGoogleRegistration && password !== confirmPassword) {
+      setError('Password and confirm password do not match.');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      const userRef = doc(db, 'users', user.uid);
-      const existingUser = await getDoc(userRef);
+      if (isGoogleRegistration) {
+        const currentUser = auth.currentUser;
+        const uid = googleUid || currentUser?.uid;
 
-      if (!existingUser.exists()) {
-        await setDoc(userRef, {
-          name: user.displayName || 'Archon User',
-          email: user.email || '',
-          archonId: generateArchonId(),
+        if (!uid) {
+          throw new Error('Google session expired. Please continue with Google again.');
+        }
+
+        const userRef = doc(db, 'users', uid);
+        const existingUser = await getDoc(userRef);
+        const existingData = existingUser.exists() ? existingUser.data() : {};
+        const archonId = existingData.archon_id || existingData.archonId || generateArchonId();
+
+        await setDoc(
+          userRef,
+          {
+            name: name || currentUser?.displayName || 'Archon User',
+            email: email || currentUser?.email || '',
+            archon_id: archonId,
+            archonId,
+            paidStatus: false,
+            passType: 'General',
+            phone,
+            referralCode,
+            gender,
+            dateOfBirth,
+            collegeState,
+            collegeDistrict,
+            collegeName,
+            instagramHandle,
+            facebookHandle,
+            linkedInHandle,
+            authProvider: 'google',
+            registrationCompleted: true,
+          },
+          { merge: true }
+        );
+      } else {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const archonId = generateArchonId();
+
+        await setDoc(doc(db, 'users', userCredential.user.uid), {
+          name,
+          email,
+          archon_id: archonId,
+          archonId,
           paidStatus: false,
           passType: 'General',
-          authProvider: 'google',
+          phone,
+          referralCode,
+          gender,
+          dateOfBirth,
+          collegeState,
+          collegeDistrict,
+          collegeName,
+          instagramHandle,
+          facebookHandle,
+          linkedInHandle,
+          authProvider: 'email',
+          registrationCompleted: true,
         });
       }
 
       navigate('/dashboard');
-    } catch (googleError) {
-      setError(googleError.message || 'Unable to continue with Google right now.');
+    } catch (signupError) {
+      setError(signupError.message || 'Unable to register right now.');
     } finally {
       setLoading(false);
     }
@@ -263,16 +312,19 @@ const RegisterPage = () => {
               onChange={(event) => setPassword(event.target.value)}
               className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
               minLength={6}
-              required
+              required={!isGoogleRegistration}
+              disabled={isGoogleRegistration}
             />
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              disabled={loading}
-              className="w-full rounded-md border-2 border-primary px-4 py-2.5 text-primary font-bold uppercase text-xs tracking-wider hover:bg-primary hover:text-black transition-all disabled:opacity-70"
-            >
-              Continue with Google
-            </button>
+            <input
+              type="password"
+              placeholder="Confirm Password*"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
+              minLength={6}
+              required={!isGoogleRegistration}
+              disabled={isGoogleRegistration}
+            />
           </div>
 
           <label className="flex items-center gap-2 text-sm text-white/80">

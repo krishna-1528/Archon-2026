@@ -1,14 +1,21 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { auth, db, googleProvider } from '../firebase';
 
-const generateArchonId = () => {
-  const digits = Math.floor(1000 + Math.random() * 9000);
-  return `AR26-${digits}`;
-};
+const isRegistrationComplete = (profile = {}) =>
+  Boolean(
+    profile.name &&
+      profile.email &&
+      profile.phone &&
+      profile.gender &&
+      profile.dateOfBirth &&
+      profile.collegeState &&
+      profile.collegeDistrict &&
+      profile.collegeName
+  );
 
 const galaxyStars = [
   { top: '8%', left: '14%' },
@@ -57,18 +64,21 @@ const SignInPage = () => {
       const userRef = doc(db, 'users', user.uid);
       const existingUser = await getDoc(userRef);
 
-      if (!existingUser.exists()) {
-        await setDoc(userRef, {
-          name: user.displayName || 'Archon User',
-          email: user.email || '',
-          archonId: generateArchonId(),
-          paidStatus: false,
-          passType: 'General',
-          authProvider: 'google',
-        });
+      if (existingUser.exists() && isRegistrationComplete(existingUser.data())) {
+        navigate('/dashboard');
+        return;
       }
 
-      navigate('/dashboard');
+      navigate('/register', {
+        state: {
+          isGoogleRegistration: true,
+          googleUid: user.uid,
+          googleProfile: {
+            name: user.displayName || '',
+            email: user.email || '',
+          },
+        },
+      });
     } catch (googleError) {
       setError(googleError.message || 'Unable to continue with Google right now.');
     } finally {
