@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NavLink, useLocation } from 'react-router-dom';
 import { 
@@ -22,19 +22,19 @@ import {
 
 const navigationItems = [
   { path: '/', icon: Home, label: 'Home', color: '#10b981' },
+  { path: '/events', icon: Calendar, label: 'Events', color: '#8b5cf6' },
   { path: '/arenas', icon: Swords, label: 'Battle Arenas', color: '#10b981' },
   { path: '/workshops', icon: Wrench, label: 'Worshops', color: '#3b82f6' },
-  { path: '/events', icon: Calendar, label: 'Events', color: '#8b5cf6' },
   { path: '/expo', icon: Shield, label: 'Guest/Keynote Speakers', color: '#ef4444' },
   { path: '/sponsors', icon: Handshake, label: 'Sponsors', color: '#ff00ff' },
   { path: '/about', icon: Info, label: 'About Us', color: '#00f2ff' },
 ];
 
 const socialItems = [
-  { href: 'https://www.instagram.com/rakshauni?igsh=MXc3bjFmd284M2dnbA==', icon: Instagram, label: 'Insta', color: '#ff00ff' },
-  { href: 'https://www.linkedin.com/school/rru-gandhinagar/', icon: Linkedin, label: 'Linkedin', color: '#00f2ff' },
-  { href: 'https://www.youtube.com/', icon: Youtube, label: 'Youtube', color: '#ff00ff' },
-  { href: 'https://x.com/', icon: Twitter, label: 'Twitter', color: '#00f2ff' },
+  { href: 'https://www.instagram.com/rakshauni/', icon: Instagram, label: 'Instagram', color: '#ff00ff' },
+  { href: 'https://in.linkedin.com/school/rakshauni/', icon: Linkedin, label: 'LinkedIn', color: '#00f2ff' },
+  { href: 'https://www.youtube.com/channel/UC6Chuk1oKdZUO0eeUzayHMA', icon: Youtube, label: 'YouTube', color: '#ff00ff' },
+  { href: 'https://x.com/RakshaUni/', icon: Twitter, label: 'X', color: '#00f2ff' },
   { href: 'https://maps.google.com/?q=Rashtriya+Raksha+University+Gandhinagar', icon: MapPin, label: 'Location', color: '#ff00ff' },
   { href: '/team', icon: Users, label: 'Team/Contact', color: '#ff00ff' },
 ];
@@ -225,41 +225,64 @@ const FloatingSidebar = () => {
 // Mobile Navigation
 const MobileNav = ({ items }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
   const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const atTop = window.scrollY <= 8;
+      setIsAtTop(atTop);
+      if (!atTop) {
+        setIsOpen(false);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <div className="md:hidden">
       {/* Menu Button */}
-      <motion.button
-        className="fixed bottom-6 right-6 z-[100] bg-primary text-black p-4 rounded-full shadow-2xl"
-        onClick={() => setIsOpen(!isOpen)}
-        whileTap={{ scale: 0.9 }}
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.5, type: 'spring' }}
-      >
-        <AnimatePresence mode="wait">
-          {isOpen ? (
-            <motion.div
-              key="close"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-            >
-              <X size={24} strokeWidth={3} />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="menu"
-              initial={{ rotate: 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -90, opacity: 0 }}
-            >
-              <Menu size={24} strokeWidth={3} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.button>
+      <AnimatePresence>
+        {isAtTop && (
+          <motion.button
+            className="fixed top-4 left-4 z-[100] bg-primary text-black p-3.5 rounded-xl shadow-2xl"
+            onClick={() => setIsOpen(!isOpen)}
+            whileTap={{ scale: 0.9 }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.85, opacity: 0 }}
+            transition={{ delay: 0.05, duration: 0.2 }}
+          >
+            <AnimatePresence mode="wait">
+              {isOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                >
+                  <X size={24} strokeWidth={3} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="menu"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                >
+                  <Menu size={24} strokeWidth={3} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
@@ -274,10 +297,10 @@ const MobileNav = ({ items }) => {
             />
             
             <motion.div
-              className="fixed bottom-24 right-6 z-[96] w-[min(90vw,320px)] max-h-[70vh] overflow-y-auto bg-background/95 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-2xl"
-              initial={{ scale: 0, opacity: 0, originX: 1, originY: 1 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
+              className="fixed top-20 left-4 z-[96] w-[min(90vw,320px)] max-h-[70vh] overflow-y-auto bg-background/95 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-2xl"
+              initial={{ x: -20, y: -10, opacity: 0 }}
+              animate={{ x: 0, y: 0, opacity: 1 }}
+              exit={{ x: -20, y: -10, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
               <div className="space-y-2 min-w-[200px]">

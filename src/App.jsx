@@ -102,7 +102,7 @@ return (
             </Routes>
 
             <footer className="relative px-4 py-8 text-center border-t border-white/10 opacity-50 text-[10px] tracking-widest uppercase">
-              Archon 2026 // RRU Gandhinagar // Innovating Technology for National Security
+              All Rights Reserved
             </footer>
           </main>
         </>

@@ -9,11 +9,11 @@ const TacticalEventCard = ({ event, delay = 0 }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.45, delay }}
-      className="group relative h-full rounded-2xl border border-white/10 bg-white/5 overflow-hidden"
+      className="group relative h-136 sm:h-144 rounded-2xl border border-white/10 bg-white/5 overflow-hidden"
       style={{ perspective: '1200px' }}
     >
       <div
-        className="relative min-h-130 transition-transform duration-700 transform-[rotateY(0deg)] group-hover:transform-[rotateY(180deg)]"
+        className="relative h-full transition-transform duration-700 transform-[rotateY(0deg)] group-hover:transform-[rotateY(180deg)]"
         style={{ transformStyle: 'preserve-3d' }}
       >
         <div
@@ -56,10 +56,10 @@ const TacticalEventCard = ({ event, delay = 0 }) => {
             <Link to={`/event/${event.id}`} className="mt-auto">
               <motion.button
                 whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileTap={{ scale: 1.04 }}
                 className="w-full py-3.5 rounded-xl bg-primary text-black font-black uppercase tracking-[0.2em] ring-1 ring-primary/40 hover:ring-2 hover:ring-primary/70 transition-all"
               >
-                Explore
+                View Event
               </motion.button>
             </Link>
           </div>
@@ -73,15 +73,18 @@ const TacticalEventCard = ({ event, delay = 0 }) => {
             transform: 'rotateY(180deg)'
           }}
         >
-          <div className="h-full rounded-2xl border border-primary/30 bg-black/40 p-6 flex flex-col justify-center items-center text-center">
+          <div className="h-full rounded-2xl border border-primary/30 bg-black/40 p-6 flex flex-col items-center text-center">
             <p className="text-primary font-mono text-xs tracking-[0.2em] uppercase mb-3">Prize Pool</p>
             <h3 className="text-xl sm:text-2xl font-black mb-4">{event.title}</h3>
             <p className="text-white/80 leading-relaxed mb-8">{event.prizes}</p>
-            <Link
-              to={`/event/${event.id}`}
-              className="w-full inline-flex items-center justify-center py-3.5 rounded-xl border border-primary text-primary font-black uppercase tracking-[0.2em] hover:bg-primary/10 transition-all"
-            >
-              View Event
+            <Link to={`/event/${event.id}`} className="w-full mt-auto">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 1.04 }}
+                className="w-full py-3.5 rounded-xl border border-primary text-primary font-black uppercase tracking-[0.2em] hover:bg-primary/10 transition-all"
+              >
+                View Event
+              </motion.button>
             </Link>
           </div>
         </div>

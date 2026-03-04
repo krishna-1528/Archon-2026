@@ -126,9 +126,6 @@ const ExpoPage = () => {
                   >
                     <item.icon size={32} className="text-primary" strokeWidth={1.5} />
                   </motion.div>
-                  <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] sm:text-xs font-mono uppercase tracking-wider text-white/60">
-                    {item.category}
-                  </span>
                 </div>
 
                 {/* Title */}

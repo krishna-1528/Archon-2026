@@ -54,7 +54,7 @@ const ArenasPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-7">
             {tacticalEvents.map((event, index) => (
-              <div key={event.id} id={event.id}>
+              <div key={event.id} id={event.id} className="h-full">
                 <TacticalEventCard event={event} delay={index * 0.05} />
               </div>
             ))}

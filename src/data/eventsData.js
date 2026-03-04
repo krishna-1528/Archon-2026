@@ -113,7 +113,7 @@ export const eventsData = [
   },
   {
     id: 'esports-bgmi',
-    title: 'BGMI Strike Ops',
+    title: 'BGMI Mobile',
     category: 'esports',
     date: '10 Apr 2026',
     time: '16:00 IST',
@@ -129,7 +129,7 @@ export const eventsData = [
   },
   {
     id: 'esports-valorant',
-    title: 'Valorant Tactical 5v5',
+    title: 'Valorant',
     category: 'esports',
     date: '11 Apr 2026',
     time: '17:00 IST',
@@ -145,7 +145,7 @@ export const eventsData = [
   },
   {
     id: 'esports-cs2',
-    title: 'Counter-Strike 2 Protocol',
+    title: 'Counter-Strike 2',
     category: 'esports',
     date: '12 Apr 2026',
     time: '13:00 IST',
@@ -161,7 +161,7 @@ export const eventsData = [
   },
   {
     id: 'esports-fifa',
-    title: 'Free-Fire',
+    title: 'Free Fire Max',
     category: 'esports',
     date: '12 Apr 2026',
     time: '18:00 IST',

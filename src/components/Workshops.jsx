@@ -8,8 +8,8 @@ const workshops = [
     icon: <Microscope size={32} /> 
   },
   { 
-    title: "CAD & 3D Printing", 
-    desc: "Workshop with AIC-RRU focused on rapid hardware prototyping[cite: 12].", 
+    title: "Quantum Technologies", 
+    desc: "Hands-on workshop on quantum computing fundamentals, secure communication, and emerging quantum applications.", 
     icon: <PenTool size={32} /> 
   },
   { 
