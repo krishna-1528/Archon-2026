@@ -3,13 +3,21 @@ import { motion } from 'framer-motion';
 import { Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Countdown from '../components/Countdown';
+import EventsPage from './EventsPage';
+import ArenasPage from './ArenasPage';
+import WorkshopsPage from './WorkshopsPage';
+import ExpoPage from './ExpoPage';
+import SponsorsPage from './SponsorsPage';
+import AboutPage from './AboutPage';
 // 1. Import your new background component
 import GamingPortalBG from '../components/GamingPortalBG';
+import MobileF1Strip from '../components/MobileF1Strip';
 
 const HomePage = () => {
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+    document.body.style.overflow = isDesktop ? 'hidden' : 'auto';
 
     return () => {
       document.body.style.overflow = previousOverflow;
@@ -17,7 +25,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-transparent">
+    <div className="min-h-screen relative overflow-x-hidden bg-transparent">
       
       {/* Sign In Button */}
       <motion.div
@@ -36,12 +44,12 @@ const HomePage = () => {
 
       {/* EVERYTHING BELOW REMAINS EXACTLY THE SAME */}
       {/* Hero Section */}
-      <section className="relative min-h-screen md:min-h-[85vh] flex flex-col justify-between md:justify-center items-center text-center px-4 pt-24 md:pt-0 pb-12 md:pb-0">
+      <section id="home" className="relative min-h-[86vh] md:min-h-[85vh] flex flex-col justify-start md:justify-center items-center text-center px-4 pt-18 md:pt-0 pb-5 md:pb-0">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="space-y-3 md:space-y-6 relative z-10 flex-1 flex flex-col justify-center"
+          className="space-y-3 md:space-y-6 relative z-10 md:flex-1 flex flex-col justify-start md:justify-center pt-1 md:pt-0"
         >
           {/* Logo */}
           <motion.div
@@ -122,35 +130,44 @@ const HomePage = () => {
 
           {/* Countdown */}
           <motion.div 
-            className="mt-4 md:mt-8"
+            className="mt-2 md:mt-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.6 }}
           >
             <Countdown targetDate={new Date('2026-04-09T00:00:00')} className="justify-center" />
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.9, duration: 0.5 }}
+            className="hidden md:flex items-center justify-center gap-4 mt-4 md:mt-6"
+          >
+            <Link
+              to="/register"
+              className="inline-flex items-center justify-center px-7 py-3 rounded-full text-xs font-bold uppercase tracking-widest border-2 border-primary bg-primary text-black hover:bg-transparent hover:text-primary transition-all duration-300"
+            >
+              Register
+            </Link>
+            <button
+              type="button"
+              className="inline-flex items-center justify-center px-7 py-3 rounded-full text-xs font-bold uppercase tracking-widest border-2 border-white/60 text-white hover:border-primary hover:text-primary transition-all duration-300"
+            >
+              Entry Pass
+            </button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.8, duration: 0.6 }}
+            className="md:hidden"
+          >
+            <MobileF1Strip />
+          </motion.div>
         </motion.div>
 
-        {/* Registration Actions */}
-        <motion.div
-          className="mt-4 md:mt-6 flex flex-wrap items-center justify-center gap-3"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.8, duration: 0.5 }}
-        >
-          <Link
-            to="/register"
-            className="px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-md border-2 border-primary text-black bg-primary hover:opacity-90 transition-all duration-300"
-          >
-            Register
-          </Link>
-          <Link
-            to="/signin"
-            className="px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-md border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-black transition-all duration-300"
-          >
-            Enter Pass
-          </Link>
-        </motion.div>
       </section>
 
       {/* Featured Section */}
@@ -179,6 +196,48 @@ const HomePage = () => {
           ))}
         </motion.div>
       </section>
+
+      {/* Mobile Continuous Scroll Pages */}
+      <div className="md:hidden relative z-20">
+        <section id="events" className="scroll-mt-24">
+          <EventsPage />
+        </section>
+
+        <section id="battle-arenas" className="scroll-mt-24">
+          <ArenasPage />
+        </section>
+
+        <section id="workshops" className="scroll-mt-24">
+          <WorkshopsPage />
+        </section>
+
+        <section id="guests" className="scroll-mt-24">
+          <ExpoPage />
+        </section>
+
+        <section id="sponsors" className="scroll-mt-24">
+          <SponsorsPage />
+        </section>
+
+        <section id="about" className="scroll-mt-24">
+          <AboutPage />
+        </section>
+
+        <section id="location" className="scroll-mt-24 px-4 py-14">
+          <div className="max-w-4xl mx-auto rounded-2xl border border-primary/25 bg-background/55 backdrop-blur-xl p-6 text-center">
+            <h2 className="text-3xl font-black mb-3">LOCATION</h2>
+            <p className="text-white/70 mb-6">Rashtriya Raksha University, Gandhinagar</p>
+            <a
+              href="https://maps.google.com/?q=Rashtriya+Raksha+University+Gandhinagar"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex px-6 py-3 rounded-full font-bold text-xs uppercase tracking-wider border border-primary text-primary hover:bg-primary/10 transition-all"
+            >
+              Open in Maps
+            </a>
+          </div>
+        </section>
+      </div>
     </div>
   );
 };

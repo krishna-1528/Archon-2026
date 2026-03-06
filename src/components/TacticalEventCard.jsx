@@ -1,8 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const TacticalEventCard = ({ event, delay = 0 }) => {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+
+    const updateViewportMode = (e) => {
+      setIsMobile(e.matches);
+      if (!e.matches) {
+        setIsFlipped(false);
+      }
+    };
+
+    updateViewportMode(mediaQuery);
+    mediaQuery.addEventListener('change', updateViewportMode);
+
+    return () => {
+      mediaQuery.removeEventListener('change', updateViewportMode);
+    };
+  }, []);
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 24 }}
@@ -13,8 +34,11 @@ const TacticalEventCard = ({ event, delay = 0 }) => {
       style={{ perspective: '1200px' }}
     >
       <div
-        className="relative h-full transition-transform duration-700 transform-[rotateY(0deg)] group-hover:transform-[rotateY(180deg)]"
-        style={{ transformStyle: 'preserve-3d' }}
+        className="relative h-full transition-transform duration-700 transform-[rotateY(0deg)] md:group-hover:transform-[rotateY(180deg)]"
+        style={{
+          transformStyle: 'preserve-3d',
+          transform: isMobile && isFlipped ? 'rotateY(180deg)' : undefined,
+        }}
       >
         <div
           className="absolute inset-0 p-6 sm:p-7"
@@ -53,15 +77,26 @@ const TacticalEventCard = ({ event, delay = 0 }) => {
               </div>
             </div>
 
-            <Link to={`/event/${event.id}`} className="mt-auto">
+            {isMobile ? (
               <motion.button
-                whileHover={{ scale: 1.02 }}
+                type="button"
+                onClick={() => setIsFlipped(true)}
                 whileTap={{ scale: 1.04 }}
-                className="w-full py-3.5 rounded-xl bg-primary text-black font-black uppercase tracking-[0.2em] ring-1 ring-primary/40 hover:ring-2 hover:ring-primary/70 transition-all"
+                className="mt-auto w-full py-3.5 rounded-xl bg-primary text-black font-black uppercase tracking-[0.2em] ring-1 ring-primary/40"
               >
                 View Event
               </motion.button>
-            </Link>
+            ) : (
+              <Link to={`/event/${event.id}`} className="mt-auto">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 1.04 }}
+                  className="w-full py-3.5 rounded-xl bg-primary text-black font-black uppercase tracking-[0.2em] ring-1 ring-primary/40 hover:ring-2 hover:ring-primary/70 transition-all"
+                >
+                  View Event
+                </motion.button>
+              </Link>
+            )}
           </div>
         </div>
 
@@ -86,6 +121,15 @@ const TacticalEventCard = ({ event, delay = 0 }) => {
                 View Event
               </motion.button>
             </Link>
+            {isMobile && (
+              <button
+                type="button"
+                onClick={() => setIsFlipped(false)}
+                className="w-full mt-3 py-2.5 rounded-xl border border-white/25 text-white/80 font-bold text-xs uppercase tracking-[0.18em]"
+              >
+                Back
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Home, 
   Swords, 
@@ -226,7 +226,18 @@ const FloatingSidebar = () => {
 const MobileNav = ({ items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
+  const [isReturningHome, setIsReturningHome] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const mobileScrollItems = [
+    { path: '/#events', label: 'Events' },
+    { path: '/#battle-arenas', label: 'Battle Arenas' },
+    { path: '/#workshops', label: 'Workshops' },
+    { path: '/#guests', label: 'Guests' },
+    { path: '/#sponsors', label: 'Sponsors' },
+    { path: '/#about', label: 'About Us' },
+    { path: '/#location', label: 'Location' },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -245,18 +256,34 @@ const MobileNav = ({ items }) => {
     };
   }, []);
 
+  const handleHomeTap = (event) => {
+    event.preventDefault();
+    setIsOpen(false);
+    setIsReturningHome(true);
+    navigate('/');
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    });
+    window.setTimeout(() => {
+      setIsReturningHome(false);
+    }, 220);
+  };
+
   return (
     <div className="md:hidden">
       {/* Menu Button */}
       <AnimatePresence>
         {isAtTop && (
           <motion.button
-            className="fixed top-4 left-4 z-[100] bg-primary text-black p-3.5 rounded-xl shadow-2xl"
+            className={`fixed top-4 left-4 z-[100] p-2 rounded-md border shadow-xl backdrop-blur-md transition-opacity ${
+              isOpen
+                ? 'bg-linear-to-br from-primary/30 via-background/90 to-secondary/30 border-primary/35 text-white opacity-100 shadow-primary/25'
+                : 'bg-linear-to-br from-primary/25 via-background/85 to-secondary/25 border-white/20 text-white opacity-100 shadow-secondary/20'
+            }`}
             onClick={() => setIsOpen(!isOpen)}
-            whileTap={{ scale: 0.9 }}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.85, opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ delay: 0.05, duration: 0.2 }}
           >
             <AnimatePresence mode="wait">
@@ -267,7 +294,7 @@ const MobileNav = ({ items }) => {
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: 90, opacity: 0 }}
                 >
-                  <X size={24} strokeWidth={3} />
+                  <X size={20} strokeWidth={3} className="opacity-100" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -276,7 +303,7 @@ const MobileNav = ({ items }) => {
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: -90, opacity: 0 }}
                 >
-                  <Menu size={24} strokeWidth={3} />
+                  <Menu size={18} strokeWidth={3} className="drop-shadow-[0_0_6px_rgba(255,255,255,0.45)]" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -284,62 +311,95 @@ const MobileNav = ({ items }) => {
         )}
       </AnimatePresence>
 
+      {/* Mobile Bottom Navigation */}
+      {!isOpen && (
+        <motion.nav
+          className="fixed bottom-3 left-1/2 -translate-x-1/2 z-[98] w-[calc(100%-1.5rem)] max-w-md bg-background/45 backdrop-blur-xl border border-white/20 rounded-2xl px-3 py-2"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08, duration: 0.22 }}
+        >
+          <div className="grid grid-cols-6 gap-1">
+            <NavLink
+              to="/"
+              onClick={handleHomeTap}
+              className={`flex items-center justify-center rounded-lg py-2 transition-all ${
+                isItemActive('/', location) ? 'bg-primary/20 text-primary' : 'text-white/80'
+              }`}
+            >
+              <Home size={18} style={{ color: isItemActive('/', location) ? '#10b981' : undefined }} />
+            </NavLink>
+
+            {socialItems
+              .filter((item) => item.label !== 'Location')
+              .map((item) => (
+                <a
+                  key={`mobile-bottom-${item.label}`}
+                  href={item.href}
+                  target={item.href.startsWith('http') ? '_blank' : undefined}
+                  rel={item.href.startsWith('http') ? 'noreferrer noopener' : undefined}
+                  className="flex items-center justify-center rounded-lg py-2 transition-all text-white/80"
+                >
+                  <item.icon size={18} style={{ color: item.color }} />
+                </a>
+              ))}
+          </div>
+        </motion.nav>
+      )}
+
+      <AnimatePresence>
+        {isReturningHome && (
+          <motion.div
+            className="fixed inset-0 z-[110] pointer-events-none bg-background/30"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18, ease: 'easeOut' }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
-          <>
+          <motion.div
+            className="fixed inset-0 z-[96] bg-background/92 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-primary/10 blur-3xl" />
+              <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-secondary/10 blur-3xl" />
+            </div>
+
             <motion.div
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[95]"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-            />
-            
-            <motion.div
-              className="fixed top-20 left-4 z-[96] w-[min(90vw,320px)] max-h-[70vh] overflow-y-auto bg-background/95 backdrop-blur-xl border border-white/20 rounded-2xl p-4 shadow-2xl"
-              initial={{ x: -20, y: -10, opacity: 0 }}
-              animate={{ x: 0, y: 0, opacity: 1 }}
-              exit={{ x: -20, y: -10, opacity: 0 }}
-              transition={{ type: 'spring', stiffness: 300 }}
+              className="relative min-h-full px-7 pt-20 pb-16 flex items-center justify-center"
+              initial={{ y: 14, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 14, opacity: 0 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
             >
-              <div className="space-y-2 min-w-[200px]">
-                {items.map((item) => {
+              <div className="w-full max-w-sm mx-auto -translate-y-2 space-y-5 text-center">
+                {mobileScrollItems.map((item) => {
                   const isActive = isItemActive(item.path, location);
 
                   return (
-                  <NavLink
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setIsOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all ${
-                      isActive ? 'bg-primary/20 text-primary' : 'text-white/70 hover:bg-white/5 hover:translate-x-1'
-                    }`}
-                  >
-                    <item.icon size={20} style={{ color: isActive ? item.color : undefined }} />
-                    <span className="font-bold text-sm">{item.label}</span>
-                  </NavLink>
+                    <NavLink
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setIsOpen(false)}
+                      className={`galaxy-gradient-text block py-1.5 font-mono font-black uppercase text-[1.7rem] tracking-[0.18em] leading-none text-center transition-all ${
+                        isActive ? 'brightness-125' : 'brightness-100'
+                      }`}
+                    >
+                      {item.label}
+                    </NavLink>
                   );
                 })}
-
-                <div className="my-2 border-t border-white/15" />
-
-                {socialItems.map((item) => (
-                  <a
-                    key={`mobile-${item.label}`}
-                    href={item.href}
-                    target={item.href.startsWith('http') ? '_blank' : undefined}
-                    rel={item.href.startsWith('http') ? 'noreferrer noopener' : undefined}
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all text-white/70 hover:bg-white/5 hover:translate-x-1"
-                  >
-                    <item.icon size={20} style={{ color: item.color }} />
-                    <span className="font-bold text-sm">{item.label}</span>
-                  </a>
-                ))}
               </div>
             </motion.div>
-          </>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>

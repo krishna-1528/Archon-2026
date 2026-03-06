@@ -38,9 +38,6 @@ const ArenasPage = () => {
               GRID
             </span>
           </h1>
-          <p className="text-base sm:text-xl text-white/60 max-w-3xl mx-auto">
-            Mission-ready competitions, strategic simulations, and digital warfare arenas curated for ARCHON 2026.
-          </p>
         </motion.div>
       </section>
 
@@ -49,7 +46,6 @@ const ArenasPage = () => {
           <SectionHeader
             number={1}
             title="Tactical Event Cards"
-            subtitle="Seven core Battle Arena operations"
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-7">
@@ -72,9 +68,6 @@ const ArenasPage = () => {
             className="mb-8 sm:mb-10"
           >
             <h2 className="text-3xl sm:text-5xl font-black mb-3">E-SPORTS ARENA</h2>
-            <p className="text-secondary font-mono text-xs sm:text-sm uppercase tracking-[0.25em]">
-              Sector: Digital Warfare
-            </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">

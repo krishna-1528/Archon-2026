@@ -61,7 +61,7 @@ const EventsPage = () => {
   return (
     <div className="min-h-screen">
       {/* Drone Show Banner */}
-      <section className="relative min-h-[75vh] flex items-center justify-center px-4 sm:px-6 overflow-hidden">
+      <section className="relative min-h-[45vh] sm:min-h-[75vh] flex items-start sm:items-center justify-center px-4 sm:px-6 pt-8 sm:pt-0 overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 -z-10">
           <motion.div
@@ -77,7 +77,7 @@ const EventsPage = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="text-center z-10 max-w-5xl"
+          className="text-center z-10 max-w-5xl mt-2 sm:mt-0"
         >
           <motion.span
             initial={{ opacity: 0 }}
@@ -94,9 +94,6 @@ const EventsPage = () => {
               DRONE SHOW
             </span>
           </h1>
-          <p className="text-base sm:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed px-2">
-            A cinematic night-sky display combining autonomous choreography, synchronized light formations, and immersive storytelling to close ARCHON 2026.
-          </p>
           <div className="mt-8 inline-flex items-center gap-2 border border-primary/40 bg-white/5 rounded-full px-5 py-2 text-xs sm:text-sm uppercase tracking-[0.2em] text-primary font-mono">
             Live on Day 3 • Main Arena
           </div>
@@ -109,7 +106,6 @@ const EventsPage = () => {
           <SectionHeader 
             number={2}
             title="Battle Arenas Briefing"
-            subtitle="Quick tactical overview before you dive into full arena details"
           />
 
           <motion.div

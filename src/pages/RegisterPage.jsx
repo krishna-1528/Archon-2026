@@ -44,15 +44,11 @@ const RegisterPage = () => {
   const googleUid = location.state?.googleUid;
   const [name, setName] = useState(location.state?.googleProfile?.name || '');
   const [phone, setPhone] = useState('');
-  const [referralCode, setReferralCode] = useState('');
   const [gender, setGender] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
   const [collegeState, setCollegeState] = useState('');
   const [collegeDistrict, setCollegeDistrict] = useState('');
   const [collegeName, setCollegeName] = useState('');
-  const [instagramHandle, setInstagramHandle] = useState('');
-  const [facebookHandle, setFacebookHandle] = useState('');
-  const [linkedInHandle, setLinkedInHandle] = useState('');
   const [email, setEmail] = useState(location.state?.googleProfile?.email || '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -115,15 +111,11 @@ const RegisterPage = () => {
             paidStatus: false,
             passType: 'General',
             phone,
-            referralCode,
             gender,
             dateOfBirth,
             collegeState,
             collegeDistrict,
             collegeName,
-            instagramHandle,
-            facebookHandle,
-            linkedInHandle,
             authProvider: 'google',
             registrationCompleted: true,
           },
@@ -141,15 +133,11 @@ const RegisterPage = () => {
           paidStatus: false,
           passType: 'General',
           phone,
-          referralCode,
           gender,
           dateOfBirth,
           collegeState,
           collegeDistrict,
           collegeName,
-          instagramHandle,
-          facebookHandle,
-          linkedInHandle,
           authProvider: 'email',
           registrationCompleted: true,
         });
@@ -198,7 +186,7 @@ const RegisterPage = () => {
         <h1 className="text-center text-3xl md:text-5xl font-black tracking-tight text-white mb-8">REGISTER</h1>
 
         <form onSubmit={handleSignUp} className="space-y-4 md:space-y-5">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
               type="text"
               placeholder="Your Name*"
@@ -214,13 +202,6 @@ const RegisterPage = () => {
               onChange={(event) => setPhone(event.target.value)}
               className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
               required
-            />
-            <input
-              type="text"
-              placeholder="Referral Code"
-              value={referralCode}
-              onChange={(event) => setReferralCode(event.target.value)}
-              className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
             />
           </div>
 
@@ -253,7 +234,7 @@ const RegisterPage = () => {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
               type="text"
               placeholder="College State*"
@@ -270,30 +251,9 @@ const RegisterPage = () => {
               className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
               required
             />
-            <input
-              type="text"
-              placeholder="LinkedIn Handle"
-              value={linkedInHandle}
-              onChange={(event) => setLinkedInHandle(event.target.value)}
-              className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
-            />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <input
-              type="text"
-              placeholder="Instagram Handle"
-              value={instagramHandle}
-              onChange={(event) => setInstagramHandle(event.target.value)}
-              className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
-            />
-            <input
-              type="text"
-              placeholder="Facebook Handle"
-              value={facebookHandle}
-              onChange={(event) => setFacebookHandle(event.target.value)}
-              className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
-            />
+          <div className="grid grid-cols-1 gap-4">
             <input
               type="email"
               placeholder="Email*"

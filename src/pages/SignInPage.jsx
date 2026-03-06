@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
+import { Shield } from 'lucide-react';
 import { auth, db, googleProvider } from '../firebase';
 
 const isRegistrationComplete = (profile = {}) =>
@@ -34,10 +35,12 @@ const galaxyStars = [
 
 const SignInPage = () => {
   const navigate = useNavigate();
+  const robotAreaRef = useRef(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [robotLook, setRobotLook] = useState({ x: 0, y: 0, tilt: 0, nod: 0 });
 
   const handleSignIn = async (event) => {
     event.preventDefault();
@@ -86,24 +89,62 @@ const SignInPage = () => {
     }
   };
 
+  const updateRobotLook = (clientX, clientY) => {
+    if (!robotAreaRef.current) {
+      return;
+    }
+
+    const rect = robotAreaRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const rawX = (clientX - centerX) / (rect.width / 2);
+    const rawY = (clientY - centerY) / (rect.height / 2);
+    const normalizedX = Math.max(-1, Math.min(1, rawX));
+    const normalizedY = Math.max(-1, Math.min(1, rawY));
+
+    setRobotLook({
+      x: normalizedX * 8,
+      y: normalizedY * 6,
+      tilt: normalizedX * 14,
+      nod: normalizedY * 10,
+    });
+  };
+
+  const handleRobotPointerMove = (event) => {
+    updateRobotLook(event.clientX, event.clientY);
+  };
+
+  const handleRobotTouchMove = (event) => {
+    const touch = event.touches?.[0];
+    if (!touch) {
+      return;
+    }
+    updateRobotLook(touch.clientX, touch.clientY);
+  };
+
+  const handleRobotLeave = () => {
+    setRobotLook({ x: 0, y: 0, tilt: 0, nod: 0 });
+  };
+
   return (
-    <section className="relative min-h-[80vh] flex items-center justify-center px-4 py-16 overflow-hidden">
-      <div className="absolute inset-0 -z-10 bg-linear-to-b from-background via-background to-black/60" />
+    <section className="relative min-h-[85vh] flex items-center justify-center px-4 py-14 md:py-18 overflow-hidden">
+      <div className="absolute inset-0 -z-10 bg-linear-to-b from-background via-background to-black/70" />
       <motion.div
-        className="absolute -top-36 left-1/2 -translate-x-1/2 w-160 h-160 rounded-full bg-primary/10 blur-3xl"
-        animate={{ scale: [1, 1.08, 1], opacity: [0.35, 0.5, 0.35] }}
+        className="absolute -top-40 left-1/2 -translate-x-1/2 w-170 h-170 rounded-full bg-primary/12 blur-3xl"
+        animate={{ scale: [1, 1.12, 1], opacity: [0.3, 0.55, 0.3] }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute -bottom-44 -left-12 w-120 h-120 rounded-full bg-secondary/10 blur-3xl"
-        animate={{ scale: [1.05, 1, 1.05], opacity: [0.4, 0.25, 0.4] }}
+        className="absolute -bottom-44 -left-14 w-130 h-130 rounded-full bg-secondary/12 blur-3xl"
+        animate={{ scale: [1.06, 1, 1.06], opacity: [0.4, 0.22, 0.4] }}
         transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
       />
       <motion.div
-        className="absolute top-10 -right-16 w-105 h-105 rounded-full border border-white/10"
+        className="absolute top-8 -right-16 w-110 h-110 rounded-full border border-white/10"
         animate={{ rotate: 360 }}
         transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
       />
+      <div className="absolute inset-0 -z-10 pointer-events-none bg-[radial-gradient(circle_at_30%_20%,rgba(82,39,255,0.2),transparent_35%),radial-gradient(circle_at_75%_70%,rgba(0,242,255,0.14),transparent_30%)]" />
 
       <div className="absolute inset-0 -z-10 pointer-events-none">
         {galaxyStars.map((star, index) => (
@@ -117,54 +158,128 @@ const SignInPage = () => {
         ))}
       </div>
 
-      <div className="w-full max-w-md rounded-2xl border border-primary/25 bg-background/60 backdrop-blur-md p-6 md:p-8">
-        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-primary mb-2">Sign In</h1>
-        <p className="text-white/70 text-sm mb-6">Use your Archon account credentials.</p>
+      <div className="absolute inset-0 -z-10 pointer-events-none opacity-30 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:44px_44px]" />
 
-        <form onSubmit={handleSignIn} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-md border border-white/20 bg-black/30 px-4 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:border-primary"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-md border border-white/20 bg-black/30 px-4 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:border-primary"
-            required
-          />
+      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-[1.1fr_1fr] gap-5 md:gap-6 items-stretch">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.45 }}
+          className="relative overflow-hidden rounded-2xl border border-white/15 bg-background/55 backdrop-blur-xl p-6 md:p-8"
+        >
+          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_20%_10%,rgba(255,0,255,0.2),transparent_32%),radial-gradient(circle_at_80%_80%,rgba(0,242,255,0.18),transparent_30%)]" />
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
+          <div className="relative h-full flex items-center justify-center">
+            <div
+              ref={robotAreaRef}
+              onPointerMove={handleRobotPointerMove}
+              onTouchMove={handleRobotTouchMove}
+              onMouseLeave={handleRobotLeave}
+              onPointerLeave={handleRobotLeave}
+              onTouchEnd={handleRobotLeave}
+              className="relative rounded-xl border border-white/15 bg-black/35 p-5 min-h-[280px] w-full flex items-center justify-center touch-none"
+            >
+              <motion.div
+                animate={{ y: [0, -5, 0], opacity: [0.9, 1, 0.9] }}
+                transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+                className="relative w-52 h-44"
+              >
+                <div className="absolute -inset-8 rounded-full bg-primary/20 blur-2xl" />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-md border-2 border-primary bg-primary px-4 py-2.5 text-black font-bold uppercase text-xs tracking-wider disabled:opacity-70"
-          >
-            {loading ? 'Signing In...' : 'Sign In'}
-          </button>
+                <motion.div
+                  className="absolute left-1/2 top-5 -translate-x-1/2 w-24 h-6 rounded-full border-2 border-white/70 bg-black/45"
+                  animate={{ x: robotLook.x * 0.18 }}
+                  transition={{ type: 'spring', stiffness: 220, damping: 16 }}
+                >
+                  <div className="absolute left-1/2 -top-5 -translate-x-1/2 w-3 h-5 rounded-t-full bg-white/75" />
+                </motion.div>
 
-          <button
-            type="button"
-            onClick={handleGoogleSignIn}
-            disabled={loading}
-            className="w-full rounded-md border-2 border-primary px-4 py-2.5 text-primary font-bold uppercase text-xs tracking-wider hover:bg-primary hover:text-black transition-all disabled:opacity-70"
-          >
-            Continue with Google
-          </button>
-        </form>
+                <motion.div
+                  className="absolute left-1/2 top-12 -translate-x-1/2 w-34 h-24 rounded-3xl border-[6px] border-white/80 bg-black/45"
+                  animate={{ x: robotLook.x, y: robotLook.y * 0.4, rotate: robotLook.tilt, rotateX: -robotLook.nod }}
+                  transition={{ type: 'spring', stiffness: 190, damping: 14 }}
+                >
+                  <motion.span
+                    className="absolute left-7 top-8 w-3 h-7 rounded-full bg-white/80"
+                    animate={{ x: robotLook.x * 0.24, y: robotLook.y * 0.18 }}
+                    transition={{ type: 'spring', stiffness: 220, damping: 16 }}
+                  />
+                  <motion.span
+                    className="absolute right-7 top-8 w-3 h-7 rounded-full bg-white/80"
+                    animate={{ x: robotLook.x * 0.24, y: robotLook.y * 0.18 }}
+                    transition={{ type: 'spring', stiffness: 220, damping: 16 }}
+                  />
+                </motion.div>
 
-        <p className="mt-5 text-sm text-white/70">
-          New here?{' '}
-          <Link to="/register" className="text-primary font-semibold hover:underline">
-            Create Account
-          </Link>
-        </p>
+                <motion.div
+                  className="absolute left-1/2 bottom-5 -translate-x-1/2 w-24 h-9 rounded-2xl border-2 border-white/60 bg-black/35"
+                  animate={{ x: robotLook.x * 0.08, y: robotLook.y * 0.04, rotate: robotLook.tilt * 0.12 }}
+                  transition={{ type: 'spring', stiffness: 220, damping: 16 }}
+                />
+              </motion.div>
+
+              <div className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-2 py-1 text-[10px] tracking-wide text-primary/90">
+                <Shield size={12} />
+                SECURE NODE
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.45, delay: 0.05 }}
+          className="rounded-2xl border border-primary/30 bg-background/65 backdrop-blur-xl p-6 md:p-8"
+        >
+          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-primary mb-2">Sign In</h1>
+          <p className="text-white/70 text-sm mb-6">Use your Archon account credentials.</p>
+
+          <form onSubmit={handleSignIn} className="space-y-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-md border border-white/20 bg-black/35 px-4 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:border-primary"
+              required
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-md border border-white/20 bg-black/35 px-4 py-2.5 text-white placeholder:text-white/40 focus:outline-none focus:border-primary"
+              required
+            />
+
+            {error && <p className="text-red-400 text-sm">{error}</p>}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-md border-2 border-primary bg-primary px-4 py-2.5 text-black font-bold uppercase text-xs tracking-wider disabled:opacity-70"
+            >
+              {loading ? 'Signing In...' : 'Sign In'}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+              className="w-full rounded-md border-2 border-primary px-4 py-2.5 text-primary font-bold uppercase text-xs tracking-wider hover:bg-primary hover:text-black transition-all disabled:opacity-70"
+            >
+              Continue with Google
+            </button>
+          </form>
+
+          <p className="mt-5 text-sm text-white/70">
+            New here?{' '}
+            <Link to="/register" className="text-primary font-semibold hover:underline">
+              Create Account
+            </Link>
+          </p>
+        </motion.div>
       </div>
     </section>
   );

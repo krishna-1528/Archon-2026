@@ -45,3 +45,24 @@ body {
   overflow: hidden;
   display: block;
 }
+
+@keyframes galaxyGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.galaxy-gradient-text {
+  background-image: linear-gradient(90deg, #5227ff, #ff9ffc, #b19eef, #00f2ff, #5227ff);
+  background-size: 250% 250%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: galaxyGradientShift 8s ease-in-out infinite;
+}
