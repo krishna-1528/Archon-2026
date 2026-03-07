@@ -41,10 +41,25 @@ function ScrollToTop() {
   return null;
 }
 
+function AppFooter() {
+  const location = useLocation();
+
+  if (location.pathname === '/') {
+    return null;
+  }
+
+  return (
+    <footer className="relative px-4 py-8 text-center border-t border-white/10 opacity-50 text-[10px] tracking-widest uppercase">
+      All Rights Reserved
+    </footer>
+  );
+}
+
 function App() {
   const hasSessionLoaded = typeof window !== 'undefined' && sessionStorage.getItem('archonLoaded') === 'true';
   const [showPreloader, setShowPreloader] = useState(!hasSessionLoaded);
   const [showLanding, setShowLanding] = useState(!hasSessionLoaded);
+  const showExperience = !showPreloader && !showLanding;
 
   const handlePreloaderComplete = () => {
     setShowPreloader(false);
@@ -93,6 +108,8 @@ return (
   <Router>
     <ScrollToTop />
     <div className="bg-background min-h-screen text-white">
+      <GamingPortalBG />
+
       <AnimatePresence mode="wait">
         {showPreloader && (
           <ArchonPreloader key="preloader" onComplete={handlePreloaderComplete} />
@@ -105,22 +122,16 @@ return (
         )}
       </AnimatePresence>
 
-      {!showPreloader && !showLanding && (
+      {showExperience && (
         <>
-          {/* 1. Add the background here so it stays behind all routes */}
-          <GamingPortalBG />
-
-          {/* 2. Lower the opacity of the grain texture so the animation is visible */}
+          {/* Keep grain only after intro for visual clarity during preload */}
           <div className="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 pointer-events-none z-10" />
           
           <FloatingSidebar />
 
           <main className="relative z-20">
             <AnimatedRoutes />
-
-            <footer className="relative px-4 py-8 text-center border-t border-white/10 opacity-50 text-[10px] tracking-widest uppercase">
-              All Rights Reserved
-            </footer>
+            <AppFooter />
           </main>
         </>
       )}

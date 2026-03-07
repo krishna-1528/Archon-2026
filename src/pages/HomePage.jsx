@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 import Countdown from '../components/Countdown';
 import EventsPage from './EventsPage';
 import { GENERAL_ENTRY_PASS_FORM_URL } from '../constants/accessPolicy';
-// 1. Import your new background component
-import GamingPortalBG from '../components/GamingPortalBG';
 
 const HomePage = () => {
   const [isAtTop, setIsAtTop] = useState(true);
@@ -54,9 +52,6 @@ const HomePage = () => {
           Sign In
         </Link>
       </motion.div>
-
-      {/* 2. Replace the old motion divs with the 3D Gaming Portal */}
-      <GamingPortalBG />
 
       {/* EVERYTHING BELOW REMAINS EXACTLY THE SAME */}
       {/* Hero Section */}
@@ -178,33 +173,6 @@ const HomePage = () => {
 
         </motion.div>
 
-      </section>
-
-      {/* Featured Section */}
-      <section className="hidden lg:block pt-0 md:pt-6 pb-1 md:pb-4 px-3 md:px-6 max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6"
-        >
-          {[
-            { title: '7+', subtitle: 'Battle Arenas', desc: 'Robowars, Capture The Flag, Cad vs Cad' },
-            { title: '10+', subtitle: 'Tech Workshops', desc: 'Advanced security & defense tech' },
-            { title: '24hr', subtitle: 'Hackathon', desc: 'National security challenges' }
-          ].map((stat, i) => (
-            <motion.div
-              key={stat.title}
-              whileHover={{ y: -10, borderColor: '#10b981' }}
-              className="p-3 md:p-6 bg-white/5 border border-white/10 rounded-lg md:rounded-2xl transition-all"
-            >
-              <h3 className="text-3xl md:text-5xl font-black text-primary mb-1">{stat.title}</h3>
-              <h4 className="text-sm md:text-xl font-bold mb-1">{stat.subtitle}</h4>
-              <p className="text-white/50 text-xs md:text-sm">{stat.desc}</p>
-            </motion.div>
-          ))}
-        </motion.div>
       </section>
 
       {/* Mobile/Tablet Continuous Scroll Section */}
