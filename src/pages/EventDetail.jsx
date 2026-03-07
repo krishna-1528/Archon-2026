@@ -72,6 +72,11 @@ const EventDetail = () => {
             <div className="mb-6">
               <p className="text-primary font-mono text-xs tracking-[0.25em] uppercase mb-3">TR-26 // Event Profile</p>
               <h1 className="text-3xl sm:text-5xl font-black mb-3">{event.title}</h1>
+              {Array.isArray(event.categories) && event.categories.length > 0 && (
+                <p className="text-xs sm:text-sm uppercase tracking-wider text-primary">
+                  Categories: {event.categories.join(' / ')}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-2 mb-5">
@@ -100,12 +105,17 @@ const EventDetail = () => {
                   transition={{ duration: 0.25 }}
                 >
                   <h2 className="text-xl sm:text-2xl font-black mb-3">{tabLabels[activeTab]}</h2>
-                  <p className="text-white/70 leading-relaxed">
-                    {activeTab === 'about' && event.about}
-                    {activeTab === 'prizes' && event.prizes}
-                    {activeTab === 'rules' && event.rules}
-                    {activeTab === 'contact' && event.contact}
-                  </p>
+                  {activeTab === 'prizes' ? (
+                    <p className="text-white/70 leading-relaxed whitespace-pre-line">
+                      {event.prizes}
+                    </p>
+                  ) : (
+                    <p className="text-white/70 leading-relaxed">
+                      {activeTab === 'about' && event.about}
+                      {activeTab === 'rules' && event.rules}
+                      {activeTab === 'contact' && event.contact}
+                    </p>
+                  )}
                 </motion.div>
               </AnimatePresence>
             </div>

@@ -4,22 +4,22 @@ import { Calculator, Box, Trophy, Target } from 'lucide-react';
 const parallelEvents = [
   { 
     name: "Human Calculator", 
-    desc: "A mental math challenge with a live leaderboard for the fastest calculations[cite: 28].", 
+    desc: "A mental math challenge with a live leaderboard for the fastest calculations.", 
     icon: <Calculator className="text-secondary" /> 
   },
   { 
     name: "Rubik's Cube Sprint", 
-    desc: "Showcase mechanical dexterity and memory in the speed-cubing arena[cite: 29].", 
+    desc: "Showcase mechanical dexterity and memory in the speed-cubing arena.", 
     icon: <Box className="text-secondary" /> 
   },
   { 
     name: "Checkmate (Blitz Chess)", 
-    desc: "High-speed chess to test strategic thinking under extreme time pressure[cite: 30].", 
+    desc: "High-speed chess to test strategic thinking under extreme time pressure.", 
     icon: <Trophy className="text-secondary" /> 
   },
   { 
     name: "The Target Lock", 
-    desc: "A precision game using ping-pong balls to test your focus[cite: 33].", 
+    desc: "A precision game using ping-pong balls to test your focus.", 
     icon: <Target className="text-secondary" /> 
   }
 ];

@@ -12,11 +12,6 @@ const coordinatorPlaceholders = Array.from({ length: 12 }, (_, index) => ({
   role: `Coordinator ${String(index + 1).padStart(2, '0')}`
 }));
 
-const prTeamPlaceholders = Array.from({ length: 3 }, (_, index) => ({
-  id: index + 1,
-  role: `PR Team ${index + 1}`
-}));
-
 const contactChannels = [
   {
     title: 'Official Email',
@@ -66,14 +61,11 @@ const TeamPage = () => {
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-black leading-tight mb-5 uppercase tracking-[0.12em] bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
             Team & Contact
           </h1>
-          <p className="text-white/65 max-w-3xl mx-auto text-sm sm:text-base">
-            Meet the student committee and coordination leads driving ARCHON 2026 at Rashtriya Raksha University, Gandhinagar.
-          </p>
         </motion.div>
 
         <section className="mb-14 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl font-black mb-6">Cores</h2>
-          <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-5 sm:gap-6">
+          <h2 className="text-2xl sm:text-3xl font-black mb-6">PR Head</h2>
+          <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {leadershipTeam.map((member, index) => (
               <motion.article
                 key={member.email}
@@ -94,32 +86,23 @@ const TeamPage = () => {
                 </div>
               </motion.article>
             ))}
-          </div>
-        </section>
+            <motion.article
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -6 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: leadershipTeam.length * 0.06 }}
+              className="group relative overflow-hidden p-3 sm:p-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl transition-all hover:border-primary/60 hover:shadow-2xl hover:shadow-primary/20"
+            >
+              <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-linear-to-br from-primary/10 via-transparent to-secondary/10" />
+              <div className="pointer-events-none absolute -top-20 -right-20 w-44 h-44 rounded-full bg-primary/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
 
-        <section className="hidden lg:block mb-14 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl font-black mb-6">PR Team</h2>
-          <div className="grid grid-cols-3 gap-5 sm:gap-6">
-            {prTeamPlaceholders.map((member, index) => (
-              <motion.article
-                key={member.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -6 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="group relative overflow-hidden p-3 sm:p-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl transition-all hover:border-primary/60 hover:shadow-2xl hover:shadow-primary/20"
-              >
-                <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-linear-to-br from-primary/10 via-transparent to-secondary/10" />
-                <div className="pointer-events-none absolute -top-20 -right-20 w-44 h-44 rounded-full bg-primary/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                <div className="relative z-10">
-                  <PlaceholderPhoto label={`PR ${member.id}`} />
-                  <h3 className="text-base sm:text-lg font-black mt-3 mb-1">abc</h3>
-                  <p className="text-primary text-xs uppercase tracking-wider mb-3">{member.role}</p>
-                </div>
-              </motion.article>
-            ))}
+              <div className="relative z-10">
+                <PlaceholderPhoto label="Core 03" />
+                <h3 className="text-base sm:text-lg font-black mt-3 mb-1">abc</h3>
+                <p className="text-primary text-xs uppercase tracking-wider mb-3">Core Team</p>
+              </div>
+            </motion.article>
           </div>
         </section>
 

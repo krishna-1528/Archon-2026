@@ -1,0 +1,16 @@
+ARCHON 2026 - Event Schedule
+
+Day 1
+- Opening Ceremony
+- Keynote Speeches
+- Workshop Sessions
+
+Day 2
+- Arenas Competitions
+- Guest Speaker Sessions
+- Hackathon Begins
+
+Day 3
+- Finals
+- Award Ceremony
+- Closing Ceremony

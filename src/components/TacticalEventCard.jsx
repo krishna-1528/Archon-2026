@@ -4,16 +4,12 @@ import { motion } from 'framer-motion';
 
 const TacticalEventCard = ({ event, delay = 0 }) => {
   const [isMobile, setIsMobile] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 767px)');
 
     const updateViewportMode = (e) => {
       setIsMobile(e.matches);
-      if (!e.matches) {
-        setIsFlipped(false);
-      }
     };
 
     updateViewportMode(mediaQuery);
@@ -34,20 +30,25 @@ const TacticalEventCard = ({ event, delay = 0 }) => {
       style={{ perspective: '1200px' }}
     >
       <div
-        className="relative h-full transition-transform duration-700 transform-[rotateY(0deg)] md:group-hover:transform-[rotateY(180deg)]"
+        className="relative h-full transition-transform duration-700 [transform:rotateY(0deg)] lg:group-hover:[transform:rotateY(180deg)]"
         style={{
           transformStyle: 'preserve-3d',
-          transform: isMobile && isFlipped ? 'rotateY(180deg)' : undefined,
         }}
       >
         <div
-          className="absolute inset-0 p-6 sm:p-7"
+          className="absolute inset-0 p-6 sm:p-7 pointer-events-auto lg:group-hover:pointer-events-none"
           style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
         >
           <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-secondary/5 pointer-events-none" />
 
           <div className="relative z-10 h-full flex flex-col">
-            <h3 className="text-xl sm:text-2xl font-black mb-4">{event.title}</h3>
+            <h3 className="text-xl sm:text-2xl font-black mb-2">{event.title}</h3>
+
+            {Array.isArray(event.categories) && event.categories.length > 0 && (
+              <p className="text-[11px] sm:text-xs uppercase tracking-wider text-primary mb-3">
+                Categories: {event.categories.join(' / ')}
+              </p>
+            )}
 
             <div className="mb-4 rounded-xl overflow-hidden border border-white/10 bg-black/20">
               <img
@@ -77,31 +78,20 @@ const TacticalEventCard = ({ event, delay = 0 }) => {
               </div>
             </div>
 
-            {isMobile ? (
-              <motion.button
-                type="button"
-                onClick={() => setIsFlipped(true)}
+            <Link to={`/event/${event.id}`} className="mt-auto">
+              <motion.span
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 1.04 }}
-                className="mt-auto w-full py-3.5 rounded-xl bg-primary text-black font-black uppercase tracking-[0.2em] ring-1 ring-primary/40"
+                className="inline-flex w-full items-center justify-center py-3.5 rounded-xl bg-primary text-black font-black uppercase tracking-[0.2em] ring-1 ring-primary/40 hover:ring-2 hover:ring-primary/70 transition-all"
               >
                 View Event
-              </motion.button>
-            ) : (
-              <Link to={`/event/${event.id}`} className="mt-auto">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 1.04 }}
-                  className="w-full py-3.5 rounded-xl bg-primary text-black font-black uppercase tracking-[0.2em] ring-1 ring-primary/40 hover:ring-2 hover:ring-primary/70 transition-all"
-                >
-                  View Event
-                </motion.button>
-              </Link>
-            )}
+              </motion.span>
+            </Link>
           </div>
         </div>
 
         <div
-          className="absolute inset-0 p-6 sm:p-7"
+          className="absolute inset-0 p-6 sm:p-7 pointer-events-none lg:group-hover:pointer-events-auto"
           style={{
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
@@ -111,25 +101,18 @@ const TacticalEventCard = ({ event, delay = 0 }) => {
           <div className="h-full rounded-2xl border border-primary/30 bg-black/40 p-6 flex flex-col items-center text-center">
             <p className="text-primary font-mono text-xs tracking-[0.2em] uppercase mb-3">Prize Pool</p>
             <h3 className="text-xl sm:text-2xl font-black mb-4">{event.title}</h3>
-            <p className="text-white/80 leading-relaxed mb-8">{event.prizes}</p>
+            <p className="text-white/80 leading-relaxed whitespace-pre-line mb-8 text-left w-full">
+              {event.prizes}
+            </p>
             <Link to={`/event/${event.id}`} className="w-full mt-auto">
-              <motion.button
+              <motion.span
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 1.04 }}
-                className="w-full py-3.5 rounded-xl border border-primary text-primary font-black uppercase tracking-[0.2em] hover:bg-primary/10 transition-all"
+                className="inline-flex w-full items-center justify-center py-3.5 rounded-xl border border-primary text-primary font-black uppercase tracking-[0.2em] hover:bg-primary/10 transition-all"
               >
                 View Event
-              </motion.button>
+              </motion.span>
             </Link>
-            {isMobile && (
-              <button
-                type="button"
-                onClick={() => setIsFlipped(false)}
-                className="w-full mt-3 py-2.5 rounded-xl border border-white/25 text-white/80 font-bold text-xs uppercase tracking-[0.18em]"
-              >
-                Back
-              </button>
-            )}
           </div>
         </div>
       </div>

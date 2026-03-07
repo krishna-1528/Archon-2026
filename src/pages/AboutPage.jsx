@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Globe, ShieldCheck, Cpu, Zap, Orbit } from 'lucide-react';
+import { Globe, ShieldCheck, Cpu, Zap, Orbit, Instagram, Linkedin, Youtube, Twitter } from 'lucide-react';
 
 const AboutPage = () => {
   return (
@@ -77,6 +77,53 @@ const AboutPage = () => {
             </ul>
           </motion.section>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="md:hidden mt-12 border-t border-white/10 pt-6"
+        >
+          <p className="text-center text-xs uppercase tracking-[0.2em] text-white/55 mb-4">Connect</p>
+          <div className="flex items-center justify-center gap-4">
+            <a
+              href="https://www.instagram.com/rakshauni/"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white/80 hover:text-primary hover:border-primary/50 transition-all"
+              aria-label="Instagram"
+            >
+              <Instagram size={18} />
+            </a>
+            <a
+              href="https://in.linkedin.com/school/rakshauni/"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white/80 hover:text-primary hover:border-primary/50 transition-all"
+              aria-label="LinkedIn"
+            >
+              <Linkedin size={18} />
+            </a>
+            <a
+              href="https://www.youtube.com/channel/UC6Chuk1oKdZUO0eeUzayHMA"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white/80 hover:text-primary hover:border-primary/50 transition-all"
+              aria-label="YouTube"
+            >
+              <Youtube size={18} />
+            </a>
+            <a
+              href="https://x.com/RakshaUni/"
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 text-white/80 hover:text-primary hover:border-primary/50 transition-all"
+              aria-label="X"
+            >
+              <Twitter size={18} />
+            </a>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

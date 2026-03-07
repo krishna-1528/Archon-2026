@@ -1,26 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Countdown from '../components/Countdown';
 import EventsPage from './EventsPage';
-import ArenasPage from './ArenasPage';
-import WorkshopsPage from './WorkshopsPage';
-import ExpoPage from './ExpoPage';
-import SponsorsPage from './SponsorsPage';
-import AboutPage from './AboutPage';
+import { GENERAL_ENTRY_PASS_FORM_URL } from '../constants/accessPolicy';
 // 1. Import your new background component
 import GamingPortalBG from '../components/GamingPortalBG';
-import MobileF1Strip from '../components/MobileF1Strip';
 
 const HomePage = () => {
+  const [isAtTop, setIsAtTop] = useState(true);
+
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
-    document.body.style.overflow = isDesktop ? 'hidden' : 'auto';
+    const applyOverflowMode = () => {
+      const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+      document.body.style.overflow = isDesktop ? 'hidden' : 'auto';
+    };
+
+    applyOverflowMode();
+    window.addEventListener('resize', applyOverflowMode);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('resize', applyOverflowMode);
+      // Always release page scroll lock when leaving Home.
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsAtTop(window.scrollY <= 8);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -30,9 +46,9 @@ const HomePage = () => {
       {/* Sign In Button */}
       <motion.div
         initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
+        animate={{ opacity: isAtTop ? 1 : 0, x: isAtTop ? 0 : 20 }}
         transition={{ delay: 0.8, duration: 0.6 }}
-        className="fixed top-6 right-6 z-50"
+        className={`fixed top-6 right-6 z-50 transition-pointer-events ${isAtTop ? 'pointer-events-auto' : 'pointer-events-none'}`}
       >
         <Link to="/signin" className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-black transition-all duration-300">
           Sign In
@@ -44,19 +60,19 @@ const HomePage = () => {
 
       {/* EVERYTHING BELOW REMAINS EXACTLY THE SAME */}
       {/* Hero Section */}
-      <section id="home" className="relative min-h-[86vh] md:min-h-[85vh] flex flex-col justify-start md:justify-center items-center text-center px-4 pt-18 md:pt-0 pb-5 md:pb-0">
+      <section id="home" className="relative min-h-[72vh] md:min-h-[85vh] lg:min-h-[78vh] flex flex-col justify-center items-center text-center px-4 pt-8 md:pt-0 lg:pt-8 pb-0 lg:pb-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="space-y-3 md:space-y-6 relative z-10 md:flex-1 flex flex-col justify-start md:justify-center pt-1 md:pt-0"
+          className="space-y-3 md:space-y-6 relative z-10 flex flex-col justify-center items-center"
         >
           {/* Logo */}
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ duration: 1, delay: 0.4, type: 'spring' }}
-            className="mt-4 md:mt-8"
+            className="mt-2 md:mt-0"
           >
             <Shield size={80} className="md:w-[120px] md:h-[120px] mx-auto text-primary mb-3 md:mb-6" strokeWidth={1.5} />
           </motion.div>
@@ -142,36 +158,30 @@ const HomePage = () => {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.9, duration: 0.5 }}
-            className="hidden md:flex items-center justify-center gap-4 mt-4 md:mt-6"
+            className="flex flex-wrap items-center justify-center gap-3 md:gap-4 mt-4 md:mt-6"
           >
             <Link
               to="/register"
-              className="inline-flex items-center justify-center px-7 py-3 rounded-full text-xs font-bold uppercase tracking-widest border-2 border-primary bg-primary text-black hover:bg-transparent hover:text-primary transition-all duration-300"
+              className="inline-flex items-center justify-center px-5 md:px-7 py-2.5 md:py-3 rounded-full text-[11px] md:text-xs font-bold uppercase tracking-wider md:tracking-widest border-2 border-primary bg-primary text-black hover:bg-transparent hover:text-primary transition-all duration-300"
             >
               Register
             </Link>
-            <button
-              type="button"
-              className="inline-flex items-center justify-center px-7 py-3 rounded-full text-xs font-bold uppercase tracking-widest border-2 border-white/60 text-white hover:border-primary hover:text-primary transition-all duration-300"
+            <a
+              href={GENERAL_ENTRY_PASS_FORM_URL}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center justify-center px-5 md:px-7 py-2.5 md:py-3 rounded-full text-[11px] md:text-xs font-bold uppercase tracking-wider md:tracking-widest border-2 border-white/60 text-white hover:border-primary hover:text-primary transition-all duration-300"
             >
               Entry Pass
-            </button>
+            </a>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.8, duration: 0.6 }}
-            className="md:hidden"
-          >
-            <MobileF1Strip />
-          </motion.div>
         </motion.div>
 
       </section>
 
       {/* Featured Section */}
-      <section className="block md:block pt-2 md:pt-6 pb-2 md:pb-4 px-3 md:px-6 max-w-7xl mx-auto">
+      <section className="hidden lg:block pt-0 md:pt-6 pb-1 md:pb-4 px-3 md:px-6 max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -197,46 +207,18 @@ const HomePage = () => {
         </motion.div>
       </section>
 
-      {/* Mobile Continuous Scroll Pages */}
-      <div className="md:hidden relative z-20">
-        <section id="events" className="scroll-mt-24">
+      {/* Mobile/Tablet Continuous Scroll Section */}
+      <div className="lg:hidden relative z-20">
+        <motion.section
+          id="events"
+          className="scroll-mt-24"
+          initial={{ opacity: 0, y: 36, scale: 0.98 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, amount: 0.12 }}
+          transition={{ duration: 0.55, ease: 'easeOut' }}
+        >
           <EventsPage />
-        </section>
-
-        <section id="battle-arenas" className="scroll-mt-24">
-          <ArenasPage />
-        </section>
-
-        <section id="workshops" className="scroll-mt-24">
-          <WorkshopsPage />
-        </section>
-
-        <section id="guests" className="scroll-mt-24">
-          <ExpoPage />
-        </section>
-
-        <section id="sponsors" className="scroll-mt-24">
-          <SponsorsPage />
-        </section>
-
-        <section id="about" className="scroll-mt-24">
-          <AboutPage />
-        </section>
-
-        <section id="location" className="scroll-mt-24 px-4 py-14">
-          <div className="max-w-4xl mx-auto rounded-2xl border border-primary/25 bg-background/55 backdrop-blur-xl p-6 text-center">
-            <h2 className="text-3xl font-black mb-3">LOCATION</h2>
-            <p className="text-white/70 mb-6">Rashtriya Raksha University, Gandhinagar</p>
-            <a
-              href="https://maps.google.com/?q=Rashtriya+Raksha+University+Gandhinagar"
-              target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex px-6 py-3 rounded-full font-bold text-xs uppercase tracking-wider border border-primary text-primary hover:bg-primary/10 transition-all"
-            >
-              Open in Maps
-            </a>
-          </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   );

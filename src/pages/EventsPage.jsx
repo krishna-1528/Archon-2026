@@ -1,217 +1,247 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Radar, Shield, GraduationCap, Wrench, Gamepad2, CalendarDays } from 'lucide-react';
+import { Shield, Gamepad2, GraduationCap, Wrench } from 'lucide-react';
 import SectionHeader from '../components/SectionHeader';
 
+const technicalEvents = [
+  {
+    title: 'Robowars',
+    desc: 'Design, build, and battle bots in a high-intensity combat arena.',
+  },
+  {
+    title: 'Capture The Flag',
+    desc: 'Compete in live cybersecurity scenarios based on offense and defense rounds.',
+  },
+  {
+    title: 'Hardware IoT Hackathon',
+    desc: 'Rapidly prototype connected systems for practical mission-driven problem statements.',
+  },
+];
+
+const esportsEvents = [
+  {
+    title: 'BGMI',
+    desc: 'Squad-based battle royale with tactical rotations and elimination scoring.',
+  },
+  {
+    title: 'Valorant',
+    desc: 'Team strategy, utility timing, and precision aim decide each bracket match.',
+  },
+  {
+    title: 'Clash Royale / Free Fire Side Brackets',
+    desc: 'Fast-paced competitive slots for players across mobile strategy and battle royale formats.',
+  },
+];
+
+const guestLectures = [
+  {
+    title: 'Defense Tech Innovation Talk',
+    desc: 'Speakers from industry and academia discuss next-gen national security tech.',
+  },
+  {
+    title: 'Cyber Security Leadership Session',
+    desc: 'Insights on cyber resilience, digital warfare readiness, and policy-level strategy.',
+  },
+];
+
+const workshops = [
+  {
+    title: 'IEEE VLSI Design',
+    desc: 'Deep dive into semiconductor architecture and sovereign chip design.',
+  },
+  {
+    title: 'Quantum Technologies',
+    desc: 'Hands-on workshop on quantum computing fundamentals, secure communication, and emerging quantum applications.',
+  },
+  {
+    title: 'AI with Cybersecurity',
+    desc: 'Securing national infrastructure using machine learning and AI.',
+  },
+];
+
 const EventsPage = () => {
-  const reveal = {
-    initial: { opacity: 0, y: 40 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: '-100px' },
-    transition: { duration: 0.6 }
-  };
+  const [isMobileView, setIsMobileView] = useState(false);
 
-  const battleBriefings = [
-    {
-      title: 'Robowars',
-      desc: 'Design mission-ready logic architectures and showcase rapid prototyping skills for sovereign systems.',
-      icon: Shield
-    },
-    {
-      title: 'Capture The Flag',
-      desc: 'Defend and attack in live security scenarios inspired by national-infrastructure cyber resilience drills.',
-      icon: Radar
-    },
-    {
-      title: 'Hardware IOT Hackathon',
-      desc: 'Jump directly to the tactical gaming bracket details on the Battle Arena page.',
-      icon: Gamepad2,
-      hashLink: '/battle-arena#esports'
-    }
-  ];
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 1023px)');
 
-  const briefingBlocks = [
-    {
-      title: 'PCB Designing (CIRCUIT-X)',
-      desc: 'Short, high-signal talks from defense-tech leaders on innovation, policy, and mission impact.',
-      icon: GraduationCap,
-      cta: '/events#event-schedule'
-    },
-    {
-      title: 'Blind Coding',
-      desc: 'Hands-on sessions covering VLSI, CAD, AI security, and practical rapid-build workflows.',
-      icon: Wrench,
-      cta: '/workshops'
-    },
-    {
-      title: 'Googly (Technical Quiz)',
-      desc: 'Fast-paced side events for strategy, speed, precision, and problem-solving across all three days.',
-      icon: CalendarDays,
-      cta: '/events#parallel-events'
-    },
-    {
-      title: 'Cad vs Cad',
-      desc: 'Fast-paced side events for strategy, speed, precision, and problem-solving across all three days.',
-      icon: CalendarDays,
-      cta: '/events#parallel-events'
+    const applyMode = (event) => {
+      setIsMobileView(event.matches);
+    };
+
+    applyMode(mediaQuery);
+    mediaQuery.addEventListener('change', applyMode);
+
+    // Keep route entry stable on mobile by resetting to top.
+    if (mediaQuery.matches) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
-  ];
+
+    return () => {
+      mediaQuery.removeEventListener('change', applyMode);
+    };
+  }, []);
+
+  const reveal = isMobileView
+    ? {
+        initial: { opacity: 0, y: 18 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, amount: 0.08 },
+        transition: { duration: 0.35 },
+      }
+    : {
+        initial: { opacity: 0, y: 30 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, margin: '-80px' },
+        transition: { duration: 0.55 },
+      };
 
   return (
-    <div className="min-h-screen">
-      {/* Drone Show Banner */}
-      <section className="relative min-h-[45vh] sm:min-h-[75vh] flex items-start sm:items-center justify-center px-4 sm:px-6 pt-8 sm:pt-0 overflow-hidden">
-        {/* Background Elements */}
-        <div className="absolute inset-0 -z-10">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-            className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
-          />
-          <div className="absolute top-10 right-10 w-72 h-72 bg-secondary/20 rounded-full blur-3xl" />
-          <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/40 to-background" />
-        </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className="min-h-screen py-16 sm:py-20 px-4 sm:px-6 md:px-20"
+    >
+      <div className="max-w-7xl mx-auto">
+        <SectionHeader number={2} title="Events Briefing" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="text-center z-10 max-w-5xl mt-2 sm:mt-0"
-        >
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-primary font-mono text-xs sm:text-sm tracking-[0.2em] sm:tracking-[0.3em] uppercase"
-          >
-            Grand Finale • Final Day
-          </motion.span>
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black mt-4 mb-5 sm:mb-6 leading-tight">
-            GRAND AERIAL
-            <br />
-            <span className="bg-linear-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
-              DRONE SHOW
-            </span>
-          </h1>
-          <div className="mt-8 inline-flex items-center gap-2 border border-primary/40 bg-white/5 rounded-full px-5 py-2 text-xs sm:text-sm uppercase tracking-[0.2em] text-primary font-mono">
-            Live on Day 3 • Main Arena
-          </div>
-        </motion.div>
-      </section>
+        <section className="mb-16">
+          <motion.div {...reveal} className="mb-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-4 py-2 text-xs uppercase tracking-[0.18em] text-primary font-mono">
+              <Shield size={14} /> Technical Events
+            </div>
+          </motion.div>
 
-      {/* Battle Arenas Briefing */}
-      <section className="py-20 sm:py-32 px-4 sm:px-6 md:px-20">
-        <div className="max-w-7xl mx-auto">
-          <SectionHeader 
-            number={2}
-            title="Battle Arenas Briefing"
-          />
-
-          <motion.div
-            {...reveal}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6"
-          >
-            {battleBriefings.map((item) => (
-              <div
-                key={item.title}
-                className="p-6 sm:p-8 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/40 transition-all"
-              >
-                <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center mb-5">
-                  <item.icon size={22} className="text-primary" />
-                </div>
+          <motion.div {...reveal} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {technicalEvents.map((item) => (
+              <article key={item.title} className="p-6 sm:p-7 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/40 transition-all">
                 <h3 className="text-xl sm:text-2xl font-black mb-3">{item.title}</h3>
-                <p className="text-white/60 leading-relaxed mb-6">{item.desc}</p>
-                {item.hashLink ? (
-                  <Link
-                    to={item.hashLink}
-                    className="inline-flex px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider border border-primary text-primary hover:bg-primary/10 transition-all"
-                  >
-                    Explore More
-                  </Link>
-                ) : (
-                  <Link
-                    to="/battle-arena"
-                    className="inline-flex px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider border border-primary text-primary hover:bg-primary/10 transition-all"
-                  >
-                    Explore More
-                  </Link>
-                )}
-              </div>
+                <p className="text-white/65 leading-relaxed">{item.desc}</p>
+              </article>
             ))}
           </motion.div>
-        </div>
-      </section>
 
-      {/* Briefing Blocks */}
-      <section className="py-8 sm:py-10 px-4 sm:px-6 md:px-20" id="parallel-events">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-          {briefingBlocks.map((block, i) => (
-            <motion.div
-              key={block.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="p-6 sm:p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-primary/40 transition-all"
-            >
-              <div className="w-12 h-12 rounded-xl bg-secondary/15 border border-secondary/30 flex items-center justify-center mb-5">
-                <block.icon size={22} className="text-secondary" />
-              </div>
-              <h3 className="text-2xl font-black mb-3">{block.title}</h3>
-              <p className="text-white/60 mb-6">{block.desc}</p>
-              <Link
-                to={block.cta}
-                className="inline-flex px-5 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider border border-secondary text-secondary hover:bg-secondary/10 transition-all"
-              >
-                Explore More
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+          <motion.div {...reveal} className="mt-7 flex justify-center">
+            <Link to="/battle-arena" className="inline-flex px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider border border-primary text-primary hover:bg-primary/10 transition-all">
+              Explore More
+            </Link>
+          </motion.div>
+        </section>
 
-      {/* Event Timeline Preview */}
-      <section id="event-schedule" className="py-16 sm:py-20 px-4 sm:px-6 md:px-20 bg-linear-to-r from-primary/5 to-secondary/5">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto p-6 sm:p-10 border border-primary/30 rounded-3xl"
-        >
-          <h3 className="text-2xl sm:text-3xl font-black mb-6 text-center">Event Schedule</h3>
-          <div className="space-y-4">
-            {[
-              { day: 'Day 1', events: 'Opening Ceremony, Keynote Speeches, Workshop Sessions' },
-              { day: 'Day 2', events: 'Arenas Competitions, Guest/Keynote Speaker Sessions, Hackathon Begins' },
-              { day: 'Day 3', events: 'Finals, Award Ceremony, Closing Ceremony' }
-            ].map((schedule, i) => (
-              <motion.div
-                key={schedule.day}
-                whileHover={{ x: 10 }}
-                className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 p-5 sm:p-6 bg-white/5 rounded-xl border border-white/10"
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className="text-2xl sm:text-3xl font-black text-primary w-auto sm:w-24">{schedule.day}</div>
-                <div className="flex-1 text-white/70">{schedule.events}</div>
-              </motion.div>
+        <section className="mb-16">
+          <motion.div {...reveal} className="mb-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-secondary/35 bg-secondary/10 px-4 py-2 text-xs uppercase tracking-[0.18em] text-secondary font-mono">
+              <Gamepad2 size={14} /> Esports
+            </div>
+          </motion.div>
+
+          <motion.div {...reveal} className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {esportsEvents.map((item) => (
+              <article key={item.title} className="p-6 sm:p-7 bg-white/5 border border-white/10 rounded-2xl hover:border-secondary/40 transition-all">
+                <h3 className="text-xl sm:text-2xl font-black mb-3">{item.title}</h3>
+                <p className="text-white/65 leading-relaxed">{item.desc}</p>
+              </article>
             ))}
-          </div>
-          <div className="text-center mt-8">
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-primary text-black px-8 py-3 rounded-full font-bold uppercase tracking-wider hover:bg-white transition-all"
-            >
-              Download Full Schedule
-            </motion.button>
-          </div>
-        </motion.div>
-      </section>
-    </div>
+          </motion.div>
+
+          <motion.div {...reveal} className="mt-7 flex justify-center">
+            <Link to="/battle-arena#esports" className="inline-flex px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider border border-secondary text-secondary hover:bg-secondary/10 transition-all">
+              Explore More
+            </Link>
+          </motion.div>
+        </section>
+
+        <section className="mb-16">
+          <motion.div {...reveal} className="mb-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.18em] text-white/80 font-mono">
+              <GraduationCap size={14} /> Guest Lectures
+            </div>
+          </motion.div>
+
+          <motion.div {...reveal} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {guestLectures.map((item) => (
+              <article key={item.title} className="p-6 sm:p-7 bg-white/5 border border-white/10 rounded-2xl hover:border-white/30 transition-all">
+                <h3 className="text-xl sm:text-2xl font-black mb-3">{item.title}</h3>
+                <p className="text-white/65 leading-relaxed">{item.desc}</p>
+              </article>
+            ))}
+          </motion.div>
+
+          <motion.div {...reveal} className="mt-7 flex justify-center">
+            <Link to="/expo" className="inline-flex px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider border border-white/40 text-white/85 hover:bg-white/10 transition-all">
+              Explore More
+            </Link>
+          </motion.div>
+        </section>
+
+        <section className="mb-16">
+          <motion.div {...reveal} className="mb-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-primary/35 bg-primary/10 px-4 py-2 text-xs uppercase tracking-[0.18em] text-primary font-mono">
+              <Wrench size={14} /> Workshops
+            </div>
+          </motion.div>
+
+          <motion.div {...reveal} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {workshops.map((item) => (
+              <article key={item.title} className="p-6 sm:p-7 bg-white/5 border border-white/10 rounded-2xl hover:border-primary/40 transition-all">
+                <h3 className="text-xl sm:text-2xl font-black mb-3">{item.title}</h3>
+                <p className="text-white/65 leading-relaxed">{item.desc}</p>
+              </article>
+            ))}
+          </motion.div>
+
+          <motion.div {...reveal} className="mt-7 flex justify-center">
+            <Link to="/workshops" className="inline-flex px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider border border-primary text-primary hover:bg-primary/10 transition-all">
+              Explore More
+            </Link>
+          </motion.div>
+        </section>
+
+        <section id="event-schedule" className="py-16 sm:py-20 px-4 sm:px-6 md:px-20 bg-linear-to-r from-primary/5 to-secondary/5 rounded-3xl border border-white/10">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto p-6 sm:p-10 border border-primary/30 rounded-3xl"
+          >
+            <h3 className="text-2xl sm:text-3xl font-black mb-6 text-center">Event Schedule</h3>
+            <div className="space-y-4">
+              {[
+                { day: 'Day 1', events: 'Opening Ceremony, Keynote Speeches, Workshop Sessions' },
+                { day: 'Day 2', events: 'Arenas Competitions, Guest Speaker Sessions, Hackathon Begins' },
+                { day: 'Day 3', events: 'Finals, Award Ceremony, Closing Ceremony' },
+              ].map((schedule, i) => (
+                <motion.div
+                  key={schedule.day}
+                  whileHover={{ x: 10 }}
+                  className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 p-5 sm:p-6 bg-white/5 rounded-xl border border-white/10"
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <div className="text-2xl sm:text-3xl font-black text-primary w-auto sm:w-24">{schedule.day}</div>
+                  <div className="flex-1 text-white/70">{schedule.events}</div>
+                </motion.div>
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <motion.a
+                href="/assets/events/archon-event-schedule.txt"
+                download
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex bg-primary text-black px-8 py-3 rounded-full font-bold uppercase tracking-wider hover:bg-white transition-all"
+              >
+                Download Full Schedule
+              </motion.a>
+            </div>
+          </motion.div>
+        </section>
+      </div>
+    </motion.div>
   );
 };
 

@@ -17,7 +17,8 @@ import {
   Users,
   ChevronRight,
   Menu,
-  X
+  X,
+  ArrowLeft
 } from 'lucide-react';
 
 const navigationItems = [
@@ -229,20 +230,24 @@ const MobileNav = ({ items }) => {
   const [isReturningHome, setIsReturningHome] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const isHomeRoute = location.pathname === '/';
+  const hasPageLevelBackControl =
+    location.pathname.startsWith('/event/') || location.pathname === '/dashboard';
   const mobileScrollItems = [
-    { path: '/#events', label: 'Events' },
-    { path: '/#battle-arenas', label: 'Battle Arenas' },
-    { path: '/#workshops', label: 'Workshops' },
-    { path: '/#guests', label: 'Guests' },
-    { path: '/#sponsors', label: 'Sponsors' },
-    { path: '/#about', label: 'About Us' },
-    { path: '/#location', label: 'Location' },
+    { path: '/events', label: 'Events' },
+    { path: '/arenas', label: 'Battle Arenas' },
+    { path: '/workshops', label: 'Workshops' },
+    { path: '/expo', label: 'Guests' },
+    { path: '/sponsors', label: 'Sponsors' },
+    { path: '/about', label: 'About Us' },
+    { path: '/team', label: 'Team/Contact' },
   ];
 
   useEffect(() => {
     const handleScroll = () => {
       const atTop = window.scrollY <= 8;
       setIsAtTop(atTop);
+
       if (!atTop) {
         setIsOpen(false);
       }
@@ -255,6 +260,12 @@ const MobileNav = ({ items }) => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (!isHomeRoute) {
+      setIsOpen(false);
+    }
+  }, [isHomeRoute]);
 
   const handleHomeTap = (event) => {
     event.preventDefault();
@@ -269,11 +280,16 @@ const MobileNav = ({ items }) => {
     }, 220);
   };
 
+  const handleBackTap = () => {
+    setIsOpen(false);
+    navigate('/');
+  };
+
   return (
     <div className="md:hidden">
       {/* Menu Button */}
       <AnimatePresence>
-        {isAtTop && (
+        {isHomeRoute && isAtTop && (
           <motion.button
             className={`fixed top-4 left-4 z-[100] p-2 rounded-md border shadow-xl backdrop-blur-md transition-opacity ${
               isOpen
@@ -311,12 +327,26 @@ const MobileNav = ({ items }) => {
         )}
       </AnimatePresence>
 
+      {!isHomeRoute && !hasPageLevelBackControl && (
+        <motion.button
+          className="fixed top-4 left-4 z-[100] p-2 rounded-md border border-white/20 bg-linear-to-br from-primary/20 via-background/85 to-secondary/20 text-white shadow-xl backdrop-blur-md"
+          onClick={handleBackTap}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.2 }}
+          aria-label="Go back"
+        >
+          <ArrowLeft size={18} strokeWidth={3} className="drop-shadow-[0_0_6px_rgba(255,255,255,0.45)]" />
+        </motion.button>
+      )}
+
       {/* Mobile Bottom Navigation */}
-      {!isOpen && (
+      {isHomeRoute && !isOpen && isAtTop && (
         <motion.nav
           className="fixed bottom-3 left-1/2 -translate-x-1/2 z-[98] w-[calc(100%-1.5rem)] max-w-md bg-background/45 backdrop-blur-xl border border-white/20 rounded-2xl px-3 py-2"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 12 }}
           transition={{ delay: 0.08, duration: 0.22 }}
         >
           <div className="grid grid-cols-6 gap-1">
@@ -361,7 +391,7 @@ const MobileNav = ({ items }) => {
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
-        {isOpen && (
+        {isHomeRoute && isOpen && (
           <motion.div
             className="fixed inset-0 z-[96] bg-background/92 backdrop-blur-sm"
             initial={{ opacity: 0 }}

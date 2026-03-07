@@ -4,7 +4,7 @@ import { Microscope, PenTool, Database } from 'lucide-react';
 const workshops = [
   { 
     title: "IEEE VLSI Design", 
-    desc: "Deep dive into semiconductor architecture and sovereign chip design[cite: 11, 48].", 
+    desc: "Deep dive into semiconductor architecture and sovereign chip design.", 
     icon: <Microscope size={32} /> 
   },
   { 
@@ -14,7 +14,7 @@ const workshops = [
   },
   { 
     title: "AI with Cybersecurity", 
-    desc: "Securing national infrastructure using machine learning and AI[cite: 13, 34].", 
+    desc: "Securing national infrastructure using machine learning and AI.", 
     icon: <Database size={32} /> 
   }
 ];
@@ -27,7 +27,7 @@ const Workshops = () => {
           <span className="w-8 sm:w-12 h-1 bg-primary"></span> TECHNICAL WORKSHOPS
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {workshops.map((ws, i) => (
             <motion.div
               key={ws.title}

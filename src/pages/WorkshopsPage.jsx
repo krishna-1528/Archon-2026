@@ -4,7 +4,7 @@ import Workshops from '../components/Workshops';
 
 const WorkshopsPage = () => {
   return (
-    <div className="min-h-screen py-16 sm:py-20 px-4 sm:px-6">
+    <div className="min-h-screen py-16 sm:py-20 px-4 sm:px-6 pb-24 sm:pb-20">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}

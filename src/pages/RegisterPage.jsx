@@ -1,26 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, EmailAuthProvider, linkWithCredential, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { auth, db } from '../firebase';
+import { ACCESS_PROTOCOL_MESSAGE } from '../constants/accessPolicy';
 
 const generateArchonId = () => {
   const digits = Math.floor(1000 + Math.random() * 9000);
   return `AR26-${digits}`;
 };
-
-const isRegistrationComplete = (profile = {}) =>
-  Boolean(
-    profile.name &&
-      profile.email &&
-      profile.phone &&
-      profile.gender &&
-      profile.dateOfBirth &&
-      profile.collegeState &&
-      profile.collegeDistrict &&
-      profile.collegeName
-  );
 
 const galaxyStars = [
   { top: '7%', left: '12%' },
@@ -75,12 +64,12 @@ const RegisterPage = () => {
       return;
     }
 
-    if (!isGoogleRegistration && password.length < 6) {
+    if (password.length < 6) {
       setError('Password must be at least 6 characters long.');
       return;
     }
 
-    if (!isGoogleRegistration && password !== confirmPassword) {
+    if (password !== confirmPassword) {
       setError('Password and confirm password do not match.');
       return;
     }
@@ -91,9 +80,30 @@ const RegisterPage = () => {
       if (isGoogleRegistration) {
         const currentUser = auth.currentUser;
         const uid = googleUid || currentUser?.uid;
+        const accountEmail = currentUser?.email || email;
 
         if (!uid) {
           throw new Error('Google session expired. Please continue with Google again.');
+        }
+
+        if (!currentUser) {
+          throw new Error('Google session expired. Please continue with Google again.');
+        }
+
+        if (!accountEmail) {
+          throw new Error('Unable to find email for your Google account.');
+        }
+
+        try {
+          const passwordCredential = EmailAuthProvider.credential(accountEmail, password);
+          await linkWithCredential(currentUser, passwordCredential);
+        } catch (linkError) {
+          if (linkError.code !== 'auth/provider-already-linked') {
+            if (linkError.code === 'auth/email-already-in-use') {
+              throw new Error('This email is already linked with another password account. Please sign in instead.');
+            }
+            throw linkError;
+          }
         }
 
         const userRef = doc(db, 'users', uid);
@@ -105,7 +115,7 @@ const RegisterPage = () => {
           userRef,
           {
             name: name || currentUser?.displayName || 'Archon User',
-            email: email || currentUser?.email || '',
+            email: accountEmail,
             archon_id: archonId,
             archonId,
             paidStatus: false,
@@ -118,6 +128,7 @@ const RegisterPage = () => {
             collegeName,
             authProvider: 'google',
             registrationCompleted: true,
+            accessProtocolMessage: ACCESS_PROTOCOL_MESSAGE,
           },
           { merge: true }
         );
@@ -140,12 +151,24 @@ const RegisterPage = () => {
           collegeName,
           authProvider: 'email',
           registrationCompleted: true,
+          accessProtocolMessage: ACCESS_PROTOCOL_MESSAGE,
         });
       }
 
-      navigate('/dashboard');
+      await signOut(auth);
+      navigate('/signin');
     } catch (signupError) {
-      setError(signupError.message || 'Unable to register right now.');
+      if (signupError.code === 'auth/operation-not-allowed') {
+        setError('Email/Password sign-in is disabled in Firebase. Please enable it in Firebase Console > Authentication > Sign-in method.');
+      } else if (signupError.code === 'auth/email-already-in-use') {
+        setError('This email is already registered. Please sign in instead.');
+      } else if (signupError.code === 'auth/weak-password') {
+        setError('Password is too weak. Use at least 6 characters.');
+      } else if (signupError.code === 'auth/invalid-email') {
+        setError('Please enter a valid email address.');
+      } else {
+        setError(signupError.message || 'Unable to register right now.');
+      }
     } finally {
       setLoading(false);
     }
@@ -272,8 +295,7 @@ const RegisterPage = () => {
               onChange={(event) => setPassword(event.target.value)}
               className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
               minLength={6}
-              required={!isGoogleRegistration}
-              disabled={isGoogleRegistration}
+              required
             />
             <input
               type="password"
@@ -282,8 +304,7 @@ const RegisterPage = () => {
               onChange={(event) => setConfirmPassword(event.target.value)}
               className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
               minLength={6}
-              required={!isGoogleRegistration}
-              disabled={isGoogleRegistration}
+              required
             />
           </div>
 

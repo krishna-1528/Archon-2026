@@ -4,22 +4,22 @@ import { Zap, Terminal, Shield, Trophy } from 'lucide-react';
 const arenas = [
   { 
     name: "Capture The Flag", 
-    desc: "24-hour national security hackathon challenge[cite: 5].", 
+    desc: "24-hour national security hackathon challenge.", 
     icon: <Terminal className="text-primary" /> 
   },
   { 
     name: "Robowars", 
-    desc: "Supreme independent control over the metal battlefield[cite: 4, 47].", 
+    desc: "Supreme independent control over the metal battlefield.", 
     icon: <Zap className="text-primary" /> 
   },
   { 
     name: "Hardware IOT Hackathon", 
-    desc: "High-energy combat: BGMI, Valorant, and Counterstrike [cite: 20-24].", 
+    desc: "High-energy combat: BGMI, Valorant, and Counterstrike.", 
     icon: <Trophy className="text-primary" /> 
   },
   { 
     name: "Cad vs Cad", 
-    desc: "PCB designing for the next generation of sovereign systems[cite: 7].", 
+    desc: "PCB designing for the next generation of sovereign systems.", 
     icon: <Shield className="text-primary" /> 
   }
 ];
@@ -31,7 +31,7 @@ const Arenas = () => {
         <div className="flex flex-col md:flex-row justify-between md:items-end mb-12 sm:mb-16 gap-4">
           <div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black italic tracking-tighter mb-2">ARENAS</h2>
-            <p className="text-white/40 font-mono text-xs sm:text-sm uppercase">Supreme Independent Authority [cite: 47]</p>
+            <p className="text-white/40 font-mono text-xs sm:text-sm uppercase">Supreme Independent Authority</p>
           </div>
           <div className="h-px flex-1 bg-white/10 mx-8 hidden md:block mb-4" />
         </div>

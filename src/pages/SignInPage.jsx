@@ -1,22 +1,9 @@
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { fetchSignInMethodsForEmail, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { motion } from 'framer-motion';
 import { Shield } from 'lucide-react';
-import { auth, db, googleProvider } from '../firebase';
-
-const isRegistrationComplete = (profile = {}) =>
-  Boolean(
-    profile.name &&
-      profile.email &&
-      profile.phone &&
-      profile.gender &&
-      profile.dateOfBirth &&
-      profile.collegeState &&
-      profile.collegeDistrict &&
-      profile.collegeName
-  );
+import { auth, googleProvider } from '../firebase';
 
 const galaxyStars = [
   { top: '8%', left: '14%' },
@@ -40,20 +27,84 @@ const SignInPage = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [isSendingReset, setIsSendingReset] = useState(false);
   const [robotLook, setRobotLook] = useState({ x: 0, y: 0, tilt: 0, nod: 0 });
 
   const handleSignIn = async (event) => {
     event.preventDefault();
     setError('');
+    setInfo('');
+    setShowForgotPassword(false);
     setLoading(true);
 
+    const normalizedEmail = email.trim();
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const methods = await fetchSignInMethodsForEmail(auth, normalizedEmail);
+
+      if (methods.length && !methods.includes('password')) {
+        if (methods.includes('google.com')) {
+          setError('This account was created with Google. Please use Continue with Google.');
+        } else {
+          setError('This account does not use password sign-in. Use your original sign-in method.');
+        }
+        return;
+      }
+
+      await signInWithEmailAndPassword(auth, normalizedEmail, password);
       navigate('/dashboard');
     } catch (signinError) {
-      setError(signinError.message || 'Unable to sign in right now.');
+      if (signinError.code === 'auth/user-not-found') {
+        setError('No account found for this email. Please register first.');
+        setShowForgotPassword(false);
+      } else if (signinError.code === 'auth/operation-not-allowed') {
+        setError('Email/Password sign-in is disabled in Firebase. Please enable it in Firebase Console > Authentication > Sign-in method.');
+        setShowForgotPassword(false);
+      } else if (signinError.code === 'auth/wrong-password' || signinError.code === 'auth/invalid-credential') {
+        setError('Incorrect email or password. Please try again.');
+        setShowForgotPassword(Boolean(normalizedEmail));
+      } else if (signinError.code === 'auth/invalid-email') {
+        setError('Please enter a valid email address.');
+        setShowForgotPassword(false);
+      } else {
+        setError(signinError.message || 'Unable to sign in right now.');
+        setShowForgotPassword(false);
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    const normalizedEmail = email.trim();
+
+    if (!normalizedEmail) {
+      setError('Enter your email first, then click Forgot Password.');
+      return;
+    }
+
+    setError('');
+    setInfo('');
+    setIsSendingReset(true);
+
+    try {
+      await sendPasswordResetEmail(auth, normalizedEmail);
+      setInfo('Password reset link sent to your email.');
+      setShowForgotPassword(false);
+    } catch (resetError) {
+      if (resetError.code === 'auth/user-not-found') {
+        setError('No account found for this email. Please register first.');
+      } else if (resetError.code === 'auth/operation-not-allowed') {
+        setError('Password reset is disabled in Firebase. Enable Email/Password in Firebase Console > Authentication > Sign-in method.');
+      } else if (resetError.code === 'auth/invalid-email') {
+        setError('Please enter a valid email address.');
+      } else {
+        setError(resetError.message || 'Unable to send reset email right now.');
+      }
+    } finally {
+      setIsSendingReset(false);
     }
   };
 
@@ -64,13 +115,6 @@ const SignInPage = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      const userRef = doc(db, 'users', user.uid);
-      const existingUser = await getDoc(userRef);
-
-      if (existingUser.exists() && isRegistrationComplete(existingUser.data())) {
-        navigate('/dashboard');
-        return;
-      }
 
       navigate('/register', {
         state: {
@@ -254,6 +298,18 @@ const SignInPage = () => {
             />
 
             {error && <p className="text-red-400 text-sm">{error}</p>}
+            {info && <p className="text-emerald-400 text-sm">{info}</p>}
+
+            {showForgotPassword && (
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                disabled={isSendingReset || loading}
+                className="text-xs text-primary underline underline-offset-4 disabled:opacity-70"
+              >
+                {isSendingReset ? 'Sending reset link...' : 'Forgot Password?'}
+              </button>
+            )}
 
             <button
               type="submit"

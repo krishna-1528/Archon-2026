@@ -15,7 +15,7 @@ const Hero = () => {
           className="mb-10"
         >
           <span className="text-primary font-mono text-xs tracking-[0.4em] uppercase">
-            RRU Techfest 2026 // [cite: 34]
+            RRU Techfest 2026
           </span>
         </motion.div>
 
@@ -35,7 +35,7 @@ const Hero = () => {
             transition={{ delay: 1.5 }}
             className="max-w-md text-lg text-white/60 font-light leading-snug"
           >
-            Innovating Technology for National Security. If we don't own the chips, we don't own the sovereignty. [cite: 48]
+            Innovating Technology for National Security. If we don't own the chips, we don't own the sovereignty.
           </motion.p>
           
           <motion.div 

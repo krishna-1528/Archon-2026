@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Mic, Brain, Lightbulb, BookOpen, Users, MessageSquare } from 'lucide-react';
 import SectionHeader from '../components/SectionHeader';
 
@@ -91,7 +92,7 @@ const ExpoPage = () => {
       </section>
 
       {/* Content Section */}
-      <section className="py-20 sm:py-32 px-4 sm:px-6 md:px-20">
+      <section id="expo-sessions" className="py-20 sm:py-32 px-4 sm:px-6 md:px-20">
         <div className="max-w-7xl mx-auto">
           <SectionHeader 
             number={3}
@@ -156,9 +157,9 @@ const ExpoPage = () => {
                 </div>
 
                 {/* CTA */}
-                <button className="mt-6 w-full py-3 border border-primary/30 rounded-xl text-primary font-bold text-sm uppercase tracking-wider hover:bg-primary/10 transition-all">
+                <a href="#expo-cta" className="mt-6 inline-flex items-center justify-center w-full py-3 border border-primary/30 rounded-xl text-primary font-bold text-sm uppercase tracking-wider hover:bg-primary/10 transition-all">
                   View Details
-                </button>
+                </a>
               </div>
 
               {/* Corner Accent */}
@@ -171,7 +172,7 @@ const ExpoPage = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 sm:py-20 px-4 sm:px-6 md:px-20 bg-linear-to-r from-primary/5 to-secondary/5">
+      <section id="expo-cta" className="py-16 sm:py-20 px-4 sm:px-6 md:px-20 bg-linear-to-r from-primary/5 to-secondary/5">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -184,20 +185,23 @@ const ExpoPage = () => {
             Attend high-impact talks, connect with notable speakers, and gain practical insights that shape your academic and professional journey.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <motion.button 
+            <motion.div 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-primary text-black px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-white transition-all w-full sm:w-auto"
+              className="w-full sm:w-auto"
             >
-              Reserve Your Seat
-            </motion.button>
-            <motion.button 
+              <Link to="/register" className="inline-flex items-center justify-center bg-primary text-black px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-white transition-all w-full sm:w-auto">
+                Reserve Your Seat
+              </Link>
+            </motion.div>
+            <motion.a
+              href="#expo-sessions"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="border border-primary text-primary px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-primary/10 transition-all w-full sm:w-auto"
+              className="inline-flex items-center justify-center border border-primary text-primary px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-primary/10 transition-all w-full sm:w-auto"
             >
               Speaker Lineup
-            </motion.button>
+            </motion.a>
           </div>
         </motion.div>
       </section>

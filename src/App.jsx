@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import ArchonPreloader from './components/ArchonPreloader';
 import LandingAnimation from './components/LandingAnimation';
 import FloatingSidebar from './components/FloatingSidebar';
@@ -57,7 +57,38 @@ function App() {
     }
   };
 
-  // src/App.jsx - Only showing the modified return section
+  const AnimatedRoutes = () => {
+    const location = useLocation();
+
+    return (
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.22, ease: 'easeOut' }}
+        >
+          <Routes location={location}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/arenas" element={<ArenasPage />} />
+            <Route path="/battle-arena" element={<ArenasPage />} />
+            <Route path="/workshops" element={<WorkshopsPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/event/:eventId" element={<EventDetail />} />
+            <Route path="/expo" element={<ExpoPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/team" element={<TeamPage />} />
+            <Route path="/sponsors" element={<SponsorsPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/signin" element={<SignInPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+          </Routes>
+        </motion.div>
+      </AnimatePresence>
+    );
+  };
+
 return (
   <Router>
     <ScrollToTop />
@@ -85,21 +116,7 @@ return (
           <FloatingSidebar />
 
           <main className="relative z-20">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/arenas" element={<ArenasPage />} />
-              <Route path="/battle-arena" element={<ArenasPage />} />
-              <Route path="/workshops" element={<WorkshopsPage />} />
-              <Route path="/events" element={<EventsPage />} />
-              <Route path="/event/:eventId" element={<EventDetail />} />
-              <Route path="/expo" element={<ExpoPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/team" element={<TeamPage />} />
-              <Route path="/sponsors" element={<SponsorsPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/signin" element={<SignInPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-            </Routes>
+            <AnimatedRoutes />
 
             <footer className="relative px-4 py-8 text-center border-t border-white/10 opacity-50 text-[10px] tracking-widest uppercase">
               All Rights Reserved
