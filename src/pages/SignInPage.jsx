@@ -1,9 +1,23 @@
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchSignInMethodsForEmail, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { Shield } from 'lucide-react';
-import { auth, googleProvider } from '../firebase';
+import { auth, db, googleProvider } from '../firebase';
+
+const isRegistrationComplete = (profile = {}) =>
+  Boolean(
+    profile.registrationCompleted &&
+      profile.name &&
+      profile.email &&
+      profile.phone &&
+      profile.gender &&
+      profile.dateOfBirth &&
+      profile.collegeState &&
+      profile.collegeDistrict &&
+      profile.collegeName
+  );
 
 const galaxyStars = [
   { top: '8%', left: '14%' },
@@ -110,11 +124,20 @@ const SignInPage = () => {
 
   const handleGoogleSignIn = async () => {
     setError('');
+    setInfo('');
     setLoading(true);
 
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
+
+      const userSnapshot = await getDoc(doc(db, 'users', user.uid));
+      const profile = userSnapshot.exists() ? userSnapshot.data() : null;
+
+      if (profile && isRegistrationComplete(profile)) {
+        navigate('/dashboard');
+        return;
+      }
 
       navigate('/register', {
         state: {

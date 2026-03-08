@@ -1,5 +1,5 @@
-import React, { useRef, useMemo } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, PerspectiveCamera, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -9,9 +9,8 @@ const THEME = {
   base: '#12002b' // BRIGHTER: Deep Saturated Violet instead of black
 };
 
-function ReactiveGeometry({ count = 60 }) {
+function ReactiveGeometry({ count = 60, pointerRef }) {
   const group = useRef();
-  const { mouse } = useThree();
   
   const particles = useMemo(() => {
     return Array.from({ length: count }, () => {
@@ -31,11 +30,14 @@ function ReactiveGeometry({ count = 60 }) {
   }, [count]);
 
   useFrame(() => {
-    // FULL SCREEN INTERACTION: group tilts based on X and Y mouse position
-    const targetX = mouse.x * 1.2;
-    const targetY = mouse.y * 0.8;
+    // Use global pointer coordinates so movement works even when UI layers are above canvas.
+    const pointer = pointerRef.current;
+    const targetX = pointer.x * 1.2;
+    const targetY = pointer.y * 0.8;
     group.current.rotation.y = THREE.MathUtils.lerp(group.current.rotation.y, targetX, 0.05);
     group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, -targetY, 0.05);
+    group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, pointer.x * 0.8, 0.04);
+    group.current.position.y = THREE.MathUtils.lerp(group.current.position.y, pointer.y * 0.6, 0.04);
   });
 
   return (
@@ -53,6 +55,22 @@ function ReactiveGeometry({ count = 60 }) {
 }
 
 const GamingPortalBG = () => {
+  const pointerRef = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handlePointerMove = (event) => {
+      const x = (event.clientX / window.innerWidth) * 2 - 1;
+      const y = -((event.clientY / window.innerHeight) * 2 - 1);
+      pointerRef.current = { x, y };
+    };
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 z-0 bg-[#12002b]">
       <Canvas dpr={[1, 2]}>
@@ -67,7 +85,7 @@ const GamingPortalBG = () => {
           <meshBasicMaterial color={THEME.cyan} wireframe transparent opacity={0.15} />
         </mesh>
 
-        <ReactiveGeometry />
+        <ReactiveGeometry pointerRef={pointerRef} />
         
         {/* MAXIMUM BRIGHTNESS LIGHTING */}
         <ambientLight intensity={1.5} />

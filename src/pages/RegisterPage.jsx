@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, EmailAuthProvider, linkWithCredential, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
+import { City, State } from 'country-state-city';
 import { auth, db } from '../firebase';
 import { ACCESS_PROTOCOL_MESSAGE } from '../constants/accessPolicy';
 
@@ -26,6 +27,8 @@ const galaxyStars = [
   { top: '90%', left: '86%' },
 ];
 
+const INDIA_COUNTRY_CODE = 'IN';
+
 const RegisterPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,6 +47,21 @@ const RegisterPage = () => {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const indiaStates = useMemo(() => State.getStatesOfCountry(INDIA_COUNTRY_CODE), []);
+
+  const cityOptions = useMemo(() => {
+    if (!collegeState) {
+      return [];
+    }
+
+    const selectedState = indiaStates.find((stateItem) => stateItem.name === collegeState);
+
+    if (!selectedState) {
+      return [];
+    }
+
+    return City.getCitiesOfState(INDIA_COUNTRY_CODE, selectedState.isoCode);
+  }, [collegeState, indiaStates]);
 
   useEffect(() => {
     if (location.state?.googleProfile?.name) {
@@ -54,6 +72,10 @@ const RegisterPage = () => {
       setEmail(location.state.googleProfile.email);
     }
   }, [location.state]);
+
+  useEffect(() => {
+    setCollegeDistrict('');
+  }, [collegeState]);
 
   const handleSignUp = async (event) => {
     event.preventDefault();
@@ -258,22 +280,35 @@ const RegisterPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="College State*"
+            <select
               value={collegeState}
               onChange={(event) => setCollegeState(event.target.value)}
-              className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
+              className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white focus:outline-none focus:border-primary"
               required
-            />
-            <input
-              type="text"
-              placeholder="College District*"
+            >
+              <option value="" className="bg-background">Select State*</option>
+              {indiaStates.map((stateItem) => (
+                <option key={stateItem.isoCode} value={stateItem.name} className="bg-background">
+                  {stateItem.name}
+                </option>
+              ))}
+            </select>
+            <select
               value={collegeDistrict}
               onChange={(event) => setCollegeDistrict(event.target.value)}
-              className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white placeholder:text-white/50 focus:outline-none focus:border-primary"
+              className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white focus:outline-none focus:border-primary disabled:opacity-60"
+              disabled={!collegeState}
               required
-            />
+            >
+              <option value="" className="bg-background">
+                {collegeState ? 'Select City*' : 'Select State First*'}
+              </option>
+              {cityOptions.map((cityItem) => (
+                <option key={`${cityItem.name}-${cityItem.stateCode}`} value={cityItem.name} className="bg-background">
+                  {cityItem.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="grid grid-cols-1 gap-4">
