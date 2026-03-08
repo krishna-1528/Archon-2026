@@ -1,33 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Countdown from '../components/Countdown';
 import EventsPage from './EventsPage';
+import AboutPage from './AboutPage';
 import { GENERAL_ENTRY_PASS_FORM_URL } from '../constants/accessPolicy';
 
 const HomePage = () => {
   const [isAtTop, setIsAtTop] = useState(true);
+  const [firstScrollFx, setFirstScrollFx] = useState(false);
+  const hasPlayedFirstScrollFxRef = useRef(false);
 
   useEffect(() => {
-    const applyOverflowMode = () => {
-      const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
-      document.body.style.overflow = isDesktop ? 'hidden' : 'auto';
-    };
-
-    applyOverflowMode();
-    window.addEventListener('resize', applyOverflowMode);
+    // Keep scroll enabled across devices on Home.
+    document.body.style.overflowX = 'hidden';
+    document.body.style.overflowY = 'auto';
+    document.documentElement.style.overflowX = 'hidden';
+    document.documentElement.style.overflowY = 'auto';
 
     return () => {
-      window.removeEventListener('resize', applyOverflowMode);
-      // Always release page scroll lock when leaving Home.
+      // Always release any inline overflow styles when leaving Home.
       document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflowX = '';
+      document.body.style.overflowY = '';
+      document.documentElement.style.overflowX = '';
+      document.documentElement.style.overflowY = '';
     };
   }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsAtTop(window.scrollY <= 8);
+
+      if (!hasPlayedFirstScrollFxRef.current && window.scrollY > 18) {
+        hasPlayedFirstScrollFxRef.current = true;
+        setFirstScrollFx(true);
+        window.setTimeout(() => setFirstScrollFx(false), 500);
+      }
     };
 
     handleScroll();
@@ -55,12 +66,21 @@ const HomePage = () => {
 
       {/* EVERYTHING BELOW REMAINS EXACTLY THE SAME */}
       {/* Hero Section */}
-      <section id="home" className="relative min-h-[70vh] md:min-h-[80vh] lg:min-h-[75vh] flex flex-col justify-center items-center text-center px-4 pt-12 md:pt-14 lg:pt-16 pb-0 lg:pb-4">
+      <motion.section
+        id="home"
+        className="relative min-h-screen md:min-h-[80vh] lg:min-h-[75vh] flex flex-col justify-center items-center text-center px-4 pt-14 md:pt-18 lg:pt-20 pb-0 lg:pb-4"
+        animate={
+          firstScrollFx
+            ? { scale: [1, 0.985, 1], opacity: [1, 0.92, 1], y: [0, -10, 0] }
+            : { scale: 1, opacity: 1, y: 0 }
+        }
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="space-y-2 md:space-y-4 relative z-10 flex flex-col justify-center items-center mt-2 md:mt-3"
+          className="space-y-4 md:space-y-4 relative z-10 flex flex-col justify-center items-center mt-4 md:mt-5"
         >
           {/* Logo */}
           <motion.div
@@ -69,7 +89,7 @@ const HomePage = () => {
             transition={{ duration: 1, delay: 0.4, type: 'spring' }}
             className="mt-3 md:mt-4"
           >
-            <Shield size={80} className="md:w-28 md:h-28 mx-auto text-primary mb-2 md:mb-4" strokeWidth={1.5} />
+            <Shield size={80} className="md:w-28 md:h-28 mx-auto text-primary mb-3 md:mb-4" strokeWidth={1.5} />
           </motion.div>
 
           {/* Title */}
@@ -78,7 +98,7 @@ const HomePage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-primary font-mono tracking-[0.3em] mb-1 md:mb-2 text-xs md:text-sm"
+              className="text-primary font-mono tracking-[0.3em] mb-2 md:mb-2 text-xs md:text-sm"
             >
               Rashtriya Raksha University
             </motion.p>
@@ -96,7 +116,7 @@ const HomePage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.9 }}
-              className="text-xl md:text-3xl font-light tracking-[0.2em] mb-1 md:mb-2 text-primary/80"
+              className="text-xl md:text-3xl font-light tracking-[0.2em] mb-2 md:mb-2 text-primary/80"
             >
               2026
             </motion.p>
@@ -105,7 +125,7 @@ const HomePage = () => {
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ delay: 1, duration: 1 }}
-              className="w-20 h-0.5 bg-primary mb-1 md:mb-2 mx-auto"
+              className="w-20 h-0.5 bg-primary mb-2 md:mb-2 mx-auto"
             />
 
             <motion.h2 
@@ -141,19 +161,19 @@ const HomePage = () => {
 
           {/* Countdown */}
           <motion.div 
-            className="mt-1 md:mt-3"
+            className="mt-3 md:mt-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.6 }}
           >
-            <Countdown targetDate={new Date('2026-04-09T00:00:00')} className="justify-center gap-2 sm:gap-4" />
+            <Countdown targetDate={new Date('2026-04-09T00:00:00')} className="justify-center gap-3 sm:gap-4" />
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.9, duration: 0.5 }}
-            className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mt-3 md:mt-4"
+            className="flex flex-wrap items-center justify-center gap-3 md:gap-3 mt-5 md:mt-4"
           >
             <Link
               to="/register"
@@ -173,21 +193,33 @@ const HomePage = () => {
 
         </motion.div>
 
-      </section>
+      </motion.section>
 
-      {/* Mobile/Tablet Continuous Scroll Section */}
-      <div className="lg:hidden relative z-20">
+      {/* Mobile scroll sections: Event Brief first, then About */}
+      <div className="lg:hidden relative z-20 mt-2">
         <motion.section
-          id="events"
+          id="events-mobile"
           className="scroll-mt-24"
           initial={{ opacity: 0, y: 36, scale: 0.98 }}
           whileInView={{ opacity: 1, y: 0, scale: 1 }}
-          viewport={{ once: true, amount: 0.12 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.55, ease: 'easeOut' }}
         >
-          <EventsPage />
+          <EventsPage disableAutoScrollReset />
+        </motion.section>
+
+        <motion.section
+          id="about-mobile"
+          className="scroll-mt-24 mt-6"
+          initial={{ opacity: 0, y: 36, scale: 0.98 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.55, ease: 'easeOut' }}
+        >
+          <AboutPage />
         </motion.section>
       </div>
+
     </div>
   );
 };

@@ -60,7 +60,7 @@ const workshops = [
   },
 ];
 
-const EventsPage = () => {
+const EventsPage = ({ disableAutoScrollReset = false }) => {
   const [isMobileView, setIsMobileView] = useState(false);
 
   useEffect(() => {
@@ -74,14 +74,14 @@ const EventsPage = () => {
     mediaQuery.addEventListener('change', applyMode);
 
     // Keep route entry stable on mobile by resetting to top.
-    if (mediaQuery.matches) {
+    if (mediaQuery.matches && !disableAutoScrollReset) {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
 
     return () => {
       mediaQuery.removeEventListener('change', applyMode);
     };
-  }, []);
+  }, [disableAutoScrollReset]);
 
   const reveal = isMobileView
     ? {

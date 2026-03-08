@@ -23,7 +23,13 @@ function RouteAwareBackground() {
   const { pathname } = useLocation();
   const isHomePage = pathname === '/';
 
-  return <GamingPortalBG enablePointerEffect={isHomePage} />;
+  return (
+    <GamingPortalBG
+      enablePointerEffect={isHomePage}
+      homeHalfGate={isHomePage}
+      isHomePage={isHomePage}
+    />
+  );
 }
 
 function ScrollToTop() {

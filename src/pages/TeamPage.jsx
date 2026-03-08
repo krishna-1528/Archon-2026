@@ -3,13 +3,27 @@ import { motion } from 'framer-motion';
 import { Users, Mail, Phone, MapPin, Linkedin, Instagram } from 'lucide-react';
 
 const leadershipTeam = [
-  { name: 'Aarav Sharma', role: 'Overall Coordinator', email: 'convener@archon2026.in', phone: '+91 90000 30001' },
-  { name: 'Diya Mehta', role: 'Overall Coordinator', email: 'coconvener@archon2026.in', phone: '+91 90000 30002' }
+  {
+    name: 'Aarav Sharma',
+    role: 'Overall Coordinator',
+    email: 'convener@archon2026.in',
+    phone: '+91 90000 30001',
+    linkedin: 'https://in.linkedin.com/school/rakshauni/'
+  },
+  {
+    name: 'Diya Mehta',
+    role: 'Overall Coordinator',
+    email: 'coconvener@archon2026.in',
+    phone: '+91 90000 30002',
+    linkedin: 'https://in.linkedin.com/school/rakshauni/'
+  }
 ];
 
 const coordinatorPlaceholders = Array.from({ length: 12 }, (_, index) => ({
   id: index + 1,
-  role: `Coordinator ${String(index + 1).padStart(2, '0')}`
+  role: `Coordinator ${String(index + 1).padStart(2, '0')}`,
+  email: `coordinator${String(index + 1).padStart(2, '0')}@archon2026.in`,
+  linkedin: 'https://in.linkedin.com/school/rakshauni/'
 }));
 
 const contactChannels = [
@@ -48,6 +62,29 @@ const PlaceholderPhoto = ({ label, compact = false }) => (
   </div>
 );
 
+const CardHoverActions = ({ email, linkedin }) => (
+  <div className="mt-1 overflow-hidden max-h-0 opacity-0 translate-y-2 pointer-events-none group-hover:max-h-20 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto max-md:max-h-20 max-md:opacity-100 max-md:translate-y-0 max-md:pointer-events-auto transition-all duration-300">
+    <div className="border-t border-white/10 pt-2 flex items-center justify-center gap-3">
+      <a
+        href={`mailto:${email}`}
+        aria-label={`Email ${email}`}
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-black/35 text-white/85 hover:border-primary/70 hover:text-primary transition-all"
+      >
+        <Mail size={18} />
+      </a>
+      <a
+        href={linkedin}
+        target="_blank"
+        rel="noreferrer noopener"
+        aria-label="Open LinkedIn profile"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/25 bg-black/35 text-white/85 hover:border-primary/70 hover:text-primary transition-all"
+      >
+        <Linkedin size={18} />
+      </a>
+    </div>
+  </div>
+);
+
 const TeamPage = () => {
   return (
     <div className="min-h-screen px-4 sm:px-6 md:px-20 py-14 sm:py-18">
@@ -64,7 +101,7 @@ const TeamPage = () => {
         </motion.div>
 
         <section className="mb-14 sm:mb-16">
-          <h2 className="text-2xl sm:text-3xl font-black mb-6">PR Head</h2>
+          <h2 className="text-2xl sm:text-3xl font-black mb-6">Core</h2>
           <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {leadershipTeam.map((member, index) => (
               <motion.article
@@ -83,6 +120,7 @@ const TeamPage = () => {
                   <PlaceholderPhoto label="abc" />
                   <h3 className="text-base sm:text-lg font-black mt-3 mb-1">abc</h3>
                   <p className="text-primary text-xs uppercase tracking-wider mb-3">{member.role}</p>
+                  <CardHoverActions email={member.email} linkedin={member.linkedin} />
                 </div>
               </motion.article>
             ))}
@@ -100,7 +138,8 @@ const TeamPage = () => {
               <div className="relative z-10">
                 <PlaceholderPhoto label="Core 03" />
                 <h3 className="text-base sm:text-lg font-black mt-3 mb-1">abc</h3>
-                <p className="text-primary text-xs uppercase tracking-wider mb-3">Core Team</p>
+                <p className="text-primary text-xs uppercase tracking-wider mb-3">PR Head</p>
+                <CardHoverActions email="prhead@archon2026.in" linkedin="https://in.linkedin.com/school/rakshauni/" />
               </div>
             </motion.article>
           </div>
@@ -108,7 +147,7 @@ const TeamPage = () => {
 
         <section className="mb-14 sm:mb-16">
           <h2 className="text-2xl sm:text-3xl font-black mb-6">Coordinators</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {coordinatorPlaceholders.map((member, index) => (
               <motion.article
                 key={member.id}
@@ -126,6 +165,7 @@ const TeamPage = () => {
                   <PlaceholderPhoto label={`Coordinator ${member.id}`} />
                   <h3 className="text-base sm:text-lg font-black mt-3 mb-1">abc</h3>
                   <p className="text-primary text-xs uppercase tracking-wider mb-3">{member.role}</p>
+                  <CardHoverActions email={member.email} linkedin={member.linkedin} />
                 </div>
               </motion.article>
             ))}

@@ -54,8 +54,25 @@ function ReactiveGeometry({ count = 60, pointerRef }) {
   );
 }
 
-const GamingPortalBG = ({ enablePointerEffect = true }) => {
+const GamingPortalBG = ({ enablePointerEffect = true, homeHalfGate = false, isHomePage = false }) => {
   const pointerRef = useRef({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+
+    updateIsMobile();
+    mediaQuery.addEventListener('change', updateIsMobile);
+
+    return () => {
+      mediaQuery.removeEventListener('change', updateIsMobile);
+    };
+  }, []);
+
+  const starCount = isHomePage ? (isMobile ? 2200 : 4200) : isMobile ? 900 : 1500;
+  const geometryCount = isHomePage ? (isMobile ? 28 : 48) : isMobile ? 10 : 16;
+  const canvasDpr = isMobile ? [1, 1.2] : [1, 1.8];
 
   useEffect(() => {
     if (!enablePointerEffect) {
@@ -64,6 +81,11 @@ const GamingPortalBG = ({ enablePointerEffect = true }) => {
     }
 
     const handlePointerMove = (event) => {
+      if (homeHalfGate && event.clientY < window.innerHeight / 2) {
+        pointerRef.current = { x: 0, y: 0 };
+        return;
+      }
+
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = -((event.clientY / window.innerHeight) * 2 - 1);
       pointerRef.current = { x, y };
@@ -74,15 +96,15 @@ const GamingPortalBG = ({ enablePointerEffect = true }) => {
     return () => {
       window.removeEventListener('pointermove', handlePointerMove);
     };
-  }, [enablePointerEffect]);
+  }, [enablePointerEffect, homeHalfGate]);
 
   return (
     <div className="fixed inset-0 z-0 bg-[#12002b]">
-      <Canvas dpr={[1, 2]}>
+      <Canvas dpr={canvasDpr}>
         <PerspectiveCamera makeDefault position={[0, 0, 18]} fov={45} />
         
         {/* Luminous Stars for high-end depth */}
-        <Stars radius={100} depth={50} count={6000} factor={4} saturation={0} fade speed={1.5} />
+        <Stars radius={100} depth={50} count={starCount} factor={4} saturation={0} fade speed={1.2} />
 
         {/* BRIGHTER GRID: High visibility Magenta/Cyan grid */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -10, 0]}>
@@ -90,7 +112,7 @@ const GamingPortalBG = ({ enablePointerEffect = true }) => {
           <meshBasicMaterial color={THEME.cyan} wireframe transparent opacity={0.15} />
         </mesh>
 
-        <ReactiveGeometry pointerRef={pointerRef} />
+        <ReactiveGeometry count={geometryCount} pointerRef={pointerRef} />
         
         {/* MAXIMUM BRIGHTNESS LIGHTING */}
         <ambientLight intensity={1.5} />
