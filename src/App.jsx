@@ -19,6 +19,13 @@ import DashboardPage from './pages/DashboardPage';
 // 1. Import the background component
 import GamingPortalBG from './components/GamingPortalBG';
 
+function RouteAwareBackground() {
+  const { pathname } = useLocation();
+  const isHomePage = pathname === '/';
+
+  return <GamingPortalBG enablePointerEffect={isHomePage} />;
+}
+
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
 
@@ -108,7 +115,7 @@ return (
   <Router>
     <ScrollToTop />
     <div className="bg-background min-h-screen text-white">
-      <GamingPortalBG />
+      <RouteAwareBackground />
 
       <AnimatePresence mode="wait">
         {showPreloader && (

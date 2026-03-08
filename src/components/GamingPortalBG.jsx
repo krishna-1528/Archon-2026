@@ -54,10 +54,15 @@ function ReactiveGeometry({ count = 60, pointerRef }) {
   );
 }
 
-const GamingPortalBG = () => {
+const GamingPortalBG = ({ enablePointerEffect = true }) => {
   const pointerRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
+    if (!enablePointerEffect) {
+      pointerRef.current = { x: 0, y: 0 };
+      return undefined;
+    }
+
     const handlePointerMove = (event) => {
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = -((event.clientY / window.innerHeight) * 2 - 1);
@@ -69,7 +74,7 @@ const GamingPortalBG = () => {
     return () => {
       window.removeEventListener('pointermove', handlePointerMove);
     };
-  }, []);
+  }, [enablePointerEffect]);
 
   return (
     <div className="fixed inset-0 z-0 bg-[#12002b]">
