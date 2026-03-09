@@ -266,7 +266,7 @@ const RegisterPage = () => {
               type="date"
               value={dateOfBirth}
               onChange={(event) => setDateOfBirth(event.target.value)}
-              className="w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white focus:outline-none focus:border-primary"
+              className="registration-date-input w-full rounded-md border border-primary/30 bg-primary/10 px-4 py-2.5 text-white focus:outline-none focus:border-primary"
               required
             />
             <input

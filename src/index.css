@@ -66,3 +66,21 @@ body {
   color: transparent;
   animation: galaxyGradientShift 8s ease-in-out infinite;
 }
+
+/* Keep selected date text visible on mobile browsers for dark themed inputs. */
+.registration-date-input {
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+}
+
+.registration-date-input::-webkit-datetime-edit,
+.registration-date-input::-webkit-datetime-edit-year-field,
+.registration-date-input::-webkit-datetime-edit-month-field,
+.registration-date-input::-webkit-datetime-edit-day-field {
+  color: #ffffff;
+}
+
+.registration-date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.1);
+  opacity: 0.9;
+}
