@@ -120,7 +120,7 @@ const DashboardPage = () => {
 
         <div className="flex flex-wrap items-center justify-center gap-3">
           <a
-            href={GENERAL_ENTRY_PASS_FORM_URL}
+            href={`${GENERAL_ENTRY_PASS_FORM_URL}?archon_id=${encodeURIComponent(profile?.archon_id || profile?.archonId || '')}`}
             target="_blank"
             rel="noreferrer noopener"
             title={ENTRY_PASS_TOOLTIP}

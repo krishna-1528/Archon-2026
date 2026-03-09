@@ -138,7 +138,7 @@ return (
       {showExperience && (
         <>
           {/* Keep grain only after intro for visual clarity during preload */}
-          <div className="fixed inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 pointer-events-none z-10" />
+          <div className="fixed inset-0 bg-[url('/assets/noise.svg')] opacity-10 pointer-events-none z-10" />
           
           <FloatingSidebar />
 

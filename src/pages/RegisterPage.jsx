@@ -5,11 +5,11 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { City, State } from 'country-state-city';
 import { auth, db } from '../firebase';
-import { ACCESS_PROTOCOL_MESSAGE } from '../constants/accessPolicy';
 
 const generateArchonId = () => {
-  const digits = Math.floor(1000 + Math.random() * 9000);
-  return `AR26-${digits}`;
+  const arr = new Uint32Array(1);
+  crypto.getRandomValues(arr);
+  return `AR26-${(arr[0] % 900000 + 100000)}`;
 };
 
 const galaxyStars = [
@@ -86,6 +86,12 @@ const RegisterPage = () => {
       return;
     }
 
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(phone)) {
+      setError('Enter a valid 10-digit Indian mobile number (starting with 6-9).');
+      return;
+    }
+
     if (password.length < 6) {
       setError('Password must be at least 6 characters long.');
       return;
@@ -150,7 +156,6 @@ const RegisterPage = () => {
             collegeName,
             authProvider: 'google',
             registrationCompleted: true,
-            accessProtocolMessage: ACCESS_PROTOCOL_MESSAGE,
           },
           { merge: true }
         );
@@ -173,7 +178,6 @@ const RegisterPage = () => {
           collegeName,
           authProvider: 'email',
           registrationCompleted: true,
-          accessProtocolMessage: ACCESS_PROTOCOL_MESSAGE,
         });
       }
 
