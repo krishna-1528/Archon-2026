@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import {
@@ -30,20 +31,20 @@ const DashboardPage = () => {
   useEffect(() => {
     let isMounted = true;
 
-    const validateAccess = async () => {
-      const user = auth.currentUser;
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!isMounted) return;
 
       if (!user) {
         navigate('/signin', { replace: true });
-        if (isMounted) {
-          setIsCheckingAccess(false);
-        }
+        setIsCheckingAccess(false);
         return;
       }
 
       try {
         const userSnapshot = await getDoc(doc(db, 'users', user.uid));
         const profile = userSnapshot.exists() ? userSnapshot.data() : null;
+
+        if (!isMounted) return;
 
         if (!profile || !isRegistrationComplete(profile)) {
           navigate('/register', {
@@ -60,23 +61,17 @@ const DashboardPage = () => {
           return;
         }
 
-        if (isMounted) {
-          setProfile(profile);
-        }
+        setProfile(profile);
       } catch {
-        navigate('/signin', { replace: true });
-        return;
+        if (isMounted) navigate('/signin', { replace: true });
       } finally {
-        if (isMounted) {
-          setIsCheckingAccess(false);
-        }
+        if (isMounted) setIsCheckingAccess(false);
       }
-    };
-
-    validateAccess();
+    });
 
     return () => {
       isMounted = false;
+      unsubscribe();
     };
   }, [navigate]);
 
