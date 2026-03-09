@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import {
@@ -30,20 +31,20 @@ const DashboardPage = () => {
   useEffect(() => {
     let isMounted = true;
 
-    const validateAccess = async () => {
-      const user = auth.currentUser;
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!isMounted) return;
 
       if (!user) {
         navigate('/signin', { replace: true });
-        if (isMounted) {
-          setIsCheckingAccess(false);
-        }
+        setIsCheckingAccess(false);
         return;
       }
 
       try {
         const userSnapshot = await getDoc(doc(db, 'users', user.uid));
         const profile = userSnapshot.exists() ? userSnapshot.data() : null;
+
+        if (!isMounted) return;
 
         if (!profile || !isRegistrationComplete(profile)) {
           navigate('/register', {
@@ -60,23 +61,17 @@ const DashboardPage = () => {
           return;
         }
 
-        if (isMounted) {
-          setProfile(profile);
-        }
+        setProfile(profile);
       } catch {
-        navigate('/signin', { replace: true });
-        return;
+        if (isMounted) navigate('/signin', { replace: true });
       } finally {
-        if (isMounted) {
-          setIsCheckingAccess(false);
-        }
+        if (isMounted) setIsCheckingAccess(false);
       }
-    };
-
-    validateAccess();
+    });
 
     return () => {
       isMounted = false;
+      unsubscribe();
     };
   }, [navigate]);
 
@@ -125,7 +120,7 @@ const DashboardPage = () => {
 
         <div className="flex flex-wrap items-center justify-center gap-3">
           <a
-            href={GENERAL_ENTRY_PASS_FORM_URL}
+            href={`${GENERAL_ENTRY_PASS_FORM_URL}?archon_id=${encodeURIComponent(profile?.archon_id || profile?.archonId || '')}`}
             target="_blank"
             rel="noreferrer noopener"
             title={ENTRY_PASS_TOOLTIP}
@@ -143,13 +138,19 @@ const DashboardPage = () => {
           </Link>
         </div>
 
-        <div className="mt-5">
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
           <Link
             to="/"
             className="inline-flex rounded-md border-2 border-primary px-5 py-2 text-xs font-bold uppercase tracking-wider text-primary hover:bg-primary hover:text-black transition-all"
           >
             Back to Home
           </Link>
+          <button
+            onClick={async () => { await signOut(auth); navigate('/signin', { replace: true }); }}
+            className="inline-flex rounded-md border-2 border-red-500 px-5 py-2 text-xs font-bold uppercase tracking-wider text-red-500 hover:bg-red-500 hover:text-black transition-all"
+          >
+            Logout
+          </button>
         </div>
       </div>
     </section>

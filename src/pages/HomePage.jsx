@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase';
 import Countdown from '../components/Countdown';
 import EventsPage from './EventsPage';
 import AboutPage from './AboutPage';
@@ -10,7 +12,15 @@ import { GENERAL_ENTRY_PASS_FORM_URL } from '../constants/accessPolicy';
 const HomePage = () => {
   const [isAtTop, setIsAtTop] = useState(true);
   const [firstScrollFx, setFirstScrollFx] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const hasPlayedFirstScrollFxRef = useRef(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsLoggedIn(Boolean(user));
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     // Keep scroll enabled across devices on Home.
@@ -59,8 +69,8 @@ const HomePage = () => {
         transition={{ delay: 0.8, duration: 0.6 }}
         className={`fixed top-5 right-5 z-50 transition-pointer-events ${isAtTop ? 'pointer-events-auto' : 'pointer-events-none'}`}
       >
-        <Link to="/signin" className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-black transition-all duration-300">
-          Sign In
+        <Link to={isLoggedIn ? '/dashboard' : '/signin'} className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider rounded-md border-2 border-primary text-primary bg-transparent hover:bg-primary hover:text-black transition-all duration-300">
+          {isLoggedIn ? 'Dashboard' : 'Sign In'}
         </Link>
       </motion.div>
 
@@ -176,10 +186,10 @@ const HomePage = () => {
             className="flex flex-wrap items-center justify-center gap-3 md:gap-3 mt-5 md:mt-4"
           >
             <Link
-              to="/register"
+              to={isLoggedIn ? '/events' : '/register'}
               className="inline-flex items-center justify-center px-5 md:px-7 py-2.5 md:py-3 rounded-full text-[11px] md:text-xs font-bold uppercase tracking-wider md:tracking-widest border-2 border-primary bg-primary text-black hover:bg-transparent hover:text-primary transition-all duration-300"
             >
-              Register
+              {isLoggedIn ? 'Explore Events' : 'Register'}
             </Link>
             <a
               href={GENERAL_ENTRY_PASS_FORM_URL}
