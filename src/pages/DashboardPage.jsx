@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import {
@@ -138,13 +138,19 @@ const DashboardPage = () => {
           </Link>
         </div>
 
-        <div className="mt-5">
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
           <Link
             to="/"
             className="inline-flex rounded-md border-2 border-primary px-5 py-2 text-xs font-bold uppercase tracking-wider text-primary hover:bg-primary hover:text-black transition-all"
           >
             Back to Home
           </Link>
+          <button
+            onClick={async () => { await signOut(auth); navigate('/signin', { replace: true }); }}
+            className="inline-flex rounded-md border-2 border-red-500 px-5 py-2 text-xs font-bold uppercase tracking-wider text-red-500 hover:bg-red-500 hover:text-black transition-all"
+          >
+            Logout
+          </button>
         </div>
       </div>
     </section>
