@@ -186,10 +186,10 @@ const HomePage = () => {
             className="flex flex-wrap items-center justify-center gap-3 md:gap-3 mt-5 md:mt-4"
           >
             <Link
-              to="/register"
+              to={isLoggedIn ? '/events' : '/register'}
               className="inline-flex items-center justify-center px-5 md:px-7 py-2.5 md:py-3 rounded-full text-[11px] md:text-xs font-bold uppercase tracking-wider md:tracking-widest border-2 border-primary bg-primary text-black hover:bg-transparent hover:text-primary transition-all duration-300"
             >
-              Register
+              {isLoggedIn ? 'Explore Events' : 'Register'}
             </Link>
             <a
               href={GENERAL_ENTRY_PASS_FORM_URL}
